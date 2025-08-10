@@ -1,0 +1,43 @@
+{
+  "name": "@paratus/db",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./src/client.ts"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "default": "./src/schema.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "postinstall": "prisma generate",
+    "push": "prisma db push",
+    "studio": "prisma studio"
+  },
+  "dependencies": {
+		"@prisma/client": "^6.13.0",
+		"zod": "^3.25.76"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3.3.1",
+    "@types/node": "20.19.10",
+		"eslint": "catalog:",
+		"prettier": "^3.6.2",
+		"prisma": "^6.13.0",
+		"typescript": "catalog:"
+	},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.1"
+}
