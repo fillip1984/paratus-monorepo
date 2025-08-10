@@ -1,11 +1,11 @@
-import type { PriorityOption } from "@prisma/client";
+// import type { PriorityOption } from "@prisma/client";
 import type { FormEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { api } from "~/trpc/react";
 import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
+// import PriorityPicker from "./PriorityPicker";
 import SectionPicker from "./SectionPicker";
 
 export default function AddTaskCard({
@@ -28,7 +28,7 @@ export default function AddTaskCard({
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<Date | null>(defaultDueDate ?? null);
-  const [priority, setPriority] = useState<PriorityOption | null>(null);
+  // const [priority, setPriority] = useState<PriorityOption | null>(null);
   const [sectionId, setSectionId] = useState<string | null>(currentSectionId);
   const [isFormValid, setIsFormValid] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -47,7 +47,7 @@ export default function AddTaskCard({
       // dismiss()
       setText("");
       setDescription("");
-      void trpc.collection.readOne.invalidate({
+      await trpc.collection.readOne.invalidate({
         id: currentCollectionId,
       });
     },
@@ -64,7 +64,7 @@ export default function AddTaskCard({
       text,
       description,
       dueDate: dueDate,
-      priority: priority,
+      // priority: priority,
       sectionId: sectionId,
       parentTaskId: parentTaskId,
     });
@@ -92,7 +92,7 @@ export default function AddTaskCard({
         ></TextareaAutosize>
         <div className="flex items-center gap-2">
           <DatePicker value={dueDate} setValue={setDueDate} />
-          <PriorityPicker value={priority} setValue={setPriority} />
+          {/* <PriorityPicker value={priority} setValue={setPriority} /> */}
 
           {/* <button
         type="button"

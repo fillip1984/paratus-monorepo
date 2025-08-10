@@ -1,14 +1,14 @@
+import type { CollectionSummaryType, SectionSummaryType } from "@paratus/api";
 import { useEffect, useState } from "react";
 import { FaAngleDown, FaInbox } from "react-icons/fa";
 import { RxSection } from "react-icons/rx";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
-import type { CollectionSummaryType, SectionSummaryType } from "~/trpc/types";
 
-type SectionPickerType = {
+interface SectionPickerType {
   label: React.ReactNode;
   value: string;
-};
+}
 
 export default function SectionPicker({
   value,

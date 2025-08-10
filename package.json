@@ -2,7 +2,7 @@
 	"name": "paratus-monorepo",
 	"private": true,
 	"engines": {
-		"node": ">=20.11.1",
+		"node": ">=22.14.0",
 		"pnpm": ">=10.11.1"
 	},
 	"packageManager": "pnpm@10.11.1",
@@ -16,6 +16,9 @@
 		"dev:mobile": "pnpm --filter paratus-mobile run dev"
 	},
 	"devDependencies": {
+		"@paratus/prettier-config": "workspace:*",
+		"prettier": "catalog:",
 		"typescript": "catalog:"
-	}
+	},
+	"prettier": "@paratus/prettier-config"
 }

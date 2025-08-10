@@ -7,12 +7,13 @@ import { useEffect, useState } from "react";
 import { FaAngleDown, FaTrash } from "react-icons/fa";
 import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
 import { api } from "~/trpc/react";
-import type { SectionDetailType } from "~/trpc/types";
+
 import { isPermanentSection } from "~/utils/section";
 import PopupMenu from "../../ui/popupMenu";
 import AddSectionCard from "./AddSectionCard";
 import AddTaskCard from "./task/AddTaskCard";
 import TaskCard from "./task/TaskCard";
+import type { SectionDetailType } from "@paratus/api";
 
 export default function SectionCard({
   section,

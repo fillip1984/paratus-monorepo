@@ -13,7 +13,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import Modal from "../ui/modal";
-import type { CollectionSummaryType } from "~/trpc/types";
+import type { CollectionSummaryType } from "@paratus/api";
 
 export default function SideNav() {
   const path = usePathname();

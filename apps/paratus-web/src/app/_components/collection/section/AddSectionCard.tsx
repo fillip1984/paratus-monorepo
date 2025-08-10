@@ -19,7 +19,7 @@ export default function AddSectionCard({
     },
   });
   const handleAddSection = () => {
-    addSection({ name: sectionName, collectionId });
+    addSection({ name: sectionName, collectionId, addAfter });
   };
   return (
     <div className="my-2 flex">

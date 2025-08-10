@@ -1,4 +1,4 @@
-import type { CollectionDetailType } from "~/trpc/types";
+import type { CollectionDetailType } from "@paratus/api";
 import SectionCard from "./section/SectionCard";
 
 export default function CollectionKanbanView({

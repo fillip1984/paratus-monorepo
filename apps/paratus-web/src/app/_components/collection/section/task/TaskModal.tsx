@@ -1,7 +1,7 @@
 "use client";
 
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
-import type { PriorityOption } from "@prisma/client";
+// import type { PriorityOption } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 import { FaEllipsis, FaPlus, FaX } from "react-icons/fa6";
@@ -11,10 +11,10 @@ import { api } from "~/trpc/react";
 
 import AddTaskCard from "./AddTaskCard";
 import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
+// import PriorityPicker from "./PriorityPicker";
 import SectionPicker from "./SectionPicker";
 import TaskListRow from "./TaskCard";
-import type { TaskDetailType } from "~/trpc/types";
+import type { TaskDetailType } from "@paratus/api";
 
 export default function TaskModal({
   collectionId,
@@ -57,9 +57,9 @@ export default function TaskModal({
     }
   }, [isEditingTextOrDescriptionTarget]);
 
-  const trpc = api.useUtils();
+  // const trpc = api.useUtils();
   const { mutate: deleteTask } = api.task.delete.useMutation({
-    onSuccess: async () => {
+    onSuccess:  () => {
       console.log("task deleted");
       dismiss();
       // await queryClient.invalidateQueries({
@@ -125,9 +125,9 @@ export default function TaskModal({
     updateTask({ ...task, dueDate: date ?? null });
   };
 
-  const handlePriorityUpdate = (priority: PriorityOption | null) => {
-    updateTask({ ...task, priority: priority });
-  };
+  // const handlePriorityUpdate = (priority: PriorityOption | null) => {
+  //   updateTask({ ...task, priority: priority });
+  // };
 
   const { mutate: reorderTasks } = api.task.reorder.useMutation({
     onSuccess: async () => {
@@ -278,7 +278,7 @@ export default function TaskModal({
             </div>
           </div>
           <div className="mt-4 ml-6 flex flex-col">
-            {task.children && task.children.length > 0 && (
+            {task.children.length > 0 && (
               <button
                 type="button"
                 onClick={() => setIsCollapsed((prev) => !prev)}
@@ -344,10 +344,10 @@ export default function TaskModal({
           </div>
           <div className="border-b-muted flex flex-col gap-1 border-b-1 p-2">
             <span className="text-sm font-bold">Priority</span>
-            <PriorityPicker
+            {/* <PriorityPicker
               value={task.priority}
               setValue={(priority) => handlePriorityUpdate(priority)}
-            />
+            /> */}
           </div>
         </aside>
       </div>

@@ -16,11 +16,11 @@ import { MdOutlineWeekend } from "react-icons/md";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { capitalizeFirstLetter } from "~/utils/string";
 
-type DateType = {
+interface DateType {
   label: string;
   value: Date | null;
   icon: React.ReactNode;
-};
+}
 const quickDateOptions = [
   {
     label: "Today",
