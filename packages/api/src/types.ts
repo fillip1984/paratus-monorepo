@@ -1,4 +1,4 @@
-import { RouterOutputs } from ".";
+import type { RouterOutputs } from ".";
 
 // sumary types
 export type CollectionSummaryType = NonNullable<

@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc",
     "postinstall": "prisma generate",
+    "generate": "prisma generate",
     "push": "prisma db push",
     "studio": "prisma studio"
   },

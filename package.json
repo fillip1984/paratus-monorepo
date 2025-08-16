@@ -1,24 +1,29 @@
 {
-	"name": "paratus-monorepo",
-	"private": true,
-	"engines": {
-		"node": ">=22.14.0",
-		"pnpm": ">=10.11.1"
-	},
-	"packageManager": "pnpm@10.11.1",
-	"scripts": {
-		"build": "pnpm -r run build",
-		"build:web": "pnpm --filter paratus-web run build",
-		"build:mobile": "pnpm --filter paratus-mobile run build",
-		"clean": "pnpm -r run clean",
-		"dev": "pnpm -r run dev",
-		"dev:web": "pnpm --filter paratus-web run dev",
-		"dev:mobile": "pnpm --filter paratus-mobile run dev"
-	},
-	"devDependencies": {
-		"@paratus/prettier-config": "workspace:*",
-		"prettier": "catalog:",
-		"typescript": "catalog:"
-	},
-	"prettier": "@paratus/prettier-config"
+  "name": "paratus-monorepo",
+  "private": true,
+  "engines": {
+    "node": ">=22.14.0",
+    "pnpm": ">=10.11.1"
+  },
+  "packageManager": "pnpm@10.11.1",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "build:web": "pnpm --filter paratus-web run build",
+    "build:mobile": "pnpm --filter paratus-mobile run build",
+    "db:studio": "pnpm with-env pnpm --filter db run studio",
+    "db:generate": "pnpm --filter db run generate",
+    "db:push": "pnpm with-env pnpm --filter db run push",
+    "clean": "pnpm -r run clean",
+    "dev": "pnpm with-env pnpm -r run dev",
+    "dev:web": "pnpm with-env pnpm --filter paratus-web run dev",
+    "dev:mobile": "pnpm with-env pnpm --filter paratus-mobile run dev",
+    "with-env": "dotenv -e ./.env --"
+  },
+  "devDependencies": {
+    "@paratus/prettier-config": "workspace:*",
+    "dotenv-cli": "^8.0.0",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  },
+  "prettier": "@paratus/prettier-config"
 }

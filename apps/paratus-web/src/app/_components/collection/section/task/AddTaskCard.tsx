@@ -1,6 +1,6 @@
 // import type { PriorityOption } from "@prisma/client";
 import type { FormEvent } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { api } from "~/trpc/react";
@@ -22,16 +22,16 @@ export default function AddTaskCard({
   dismiss: () => void;
 }) {
   // steal focus
-  useEffect(() => {
-    formRef.current?.querySelector("input")?.focus();
-  }, []);
+  // useEffect(() => {
+  //   formRef.current?.querySelector("input")?.focus();
+  // }, []);
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<Date | null>(defaultDueDate ?? null);
   // const [priority, setPriority] = useState<PriorityOption | null>(null);
   const [sectionId, setSectionId] = useState<string | null>(currentSectionId);
   const [isFormValid, setIsFormValid] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+  // const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (text.trim()) {
       setIsFormValid(true);
@@ -74,7 +74,7 @@ export default function AddTaskCard({
     <form
       onSubmit={handleSubmit}
       className="flex flex-col rounded-xl border border-white/30 bg-white/5"
-      ref={formRef}
+      // ref={formRef}
     >
       <div className="flex flex-col p-2">
         <input

@@ -1,6 +1,7 @@
 // import { PriorityOption } from "@prisma/client";
-import { z } from "zod";
 import { endOfDay, startOfDay } from "date-fns";
+import { z } from "zod/v4";
+
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const taskRouter = createTRPCRouter({

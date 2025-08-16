@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FaCalendarDay,
   FaCalendarWeek,
@@ -9,11 +11,10 @@ import {
   FaX,
 } from "react-icons/fa6";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import type { CollectionSummaryType } from "@paratus/api";
+
 import { api } from "~/trpc/react";
 import Modal from "../ui/modal";
-import type { CollectionSummaryType } from "@paratus/api";
 
 export default function SideNav() {
   const path = usePathname();
@@ -128,22 +129,22 @@ const AddCollectionModal = ({
   close: () => void;
 }) => {
   const [name, setName] = useState("");
-  const nameInputRef = useRef<HTMLInputElement>(null);
+  // const nameInputRef = useRef<HTMLInputElement>(null);
   const [isValid, setIsValid] = useState(false);
   useEffect(() => {
     setIsValid(name.trim() !== "");
   }, [name]);
 
-  useEffect(() => {
-    if (isOpen) {
-      nameInputRef.current?.focus();
-    }
-  }, [isOpen]);
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     nameInputRef.current?.focus();
+  //   }
+  // }, [isOpen]);
 
   const router = useRouter();
   const trpc = api.useUtils();
   const { mutate: createCollection } = api.collection.create.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       void trpc.collection.invalidate();
       close();
       setName("");
@@ -172,7 +173,7 @@ const AddCollectionModal = ({
         </div>
         <div className="flex flex-1 flex-col gap-2 p-2">
           <input
-            ref={nameInputRef}
+            // ref={nameInputRef}
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}

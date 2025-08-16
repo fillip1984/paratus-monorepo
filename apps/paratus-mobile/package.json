@@ -1,9 +1,9 @@
 {
-  "name": "paratus-mobile",
+  "name": "@paratus/paratus-mobile",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "build": "eas build -p ios -e production --local",
+    "build": "eas build -p ios -e production --local --non-interactive",
     "dev": "expo run:ios",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
@@ -11,9 +11,15 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+    "@paratus/api": "workspace:*",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
+    "@tanstack/react-query": "catalog:",
+    "@trpc/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "@trpc/react-query": "11.4.4",
+    "@trpc/tanstack-react-query": "catalog:",
     "expo": "~53.0.20",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
@@ -39,6 +45,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@paratus/api": "workspace:*",
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3",
     "eslint": "^9.25.0",

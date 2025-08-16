@@ -1,9 +1,7 @@
-import { z } from "zod";
-import {
-  createTRPCRouter,
-  publicProcedure,
-  type trpcContextShape,
-} from "../trpc";
+import { z } from "zod/v4";
+
+import type { trpcContextShape } from "../trpc";
+import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const collectionRouter = createTRPCRouter({
   readAll: publicProcedure.query(async ({ ctx }) => {
@@ -50,12 +48,13 @@ export const collectionRouter = createTRPCRouter({
   readOne: publicProcedure
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
-      if (input.id === "inbox") {
+      if ("inbox" === input.id.toLowerCase()) {
         const inboxId = (await findOrCreateInbox(ctx)).id;
+        console.log({ inboxId });
         return await fetchCollection(inboxId, ctx);
-      } else if (input.id === "today") {
+      } else if ("today" === input.id.toLowerCase()) {
         return await fetchCollection(input.id, ctx);
-      } else if (input.id === "upcoming") {
+      } else if ("upcoming" === input.id.toLowerCase()) {
         return await fetchCollection(input.id, ctx);
       } else {
         return fetchCollection(input.id, ctx);
