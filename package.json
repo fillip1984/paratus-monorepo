@@ -10,14 +10,13 @@
     "build": "pnpm -r run build",
     "build:web": "pnpm --filter !paratus-mobile run build",
     "build:mobile": "pnpm --filter !paratus-web run build",
-    "db:studio": "pnpm with-env pnpm --filter db run studio",
+    "db:studio": "pnpm --filter db run studio",
     "db:generate": "pnpm --filter db run generate",
-    "db:push": "pnpm with-env pnpm --filter db run push",
+    "db:push": "pnpm --filter db run push",
     "clean": "pnpm -r run clean",
-    "dev": "pnpm with-env pnpm -r run dev",
-    "dev:web": "pnpm with-env pnpm --filter paratus-web run dev",
-    "dev:mobile": "pnpm with-env pnpm --filter paratus-mobile run dev",
-    "with-env": "dotenv -e ./.env --"
+    "dev": "pnpm -r run dev",
+    "dev:web": "pnpm --filter paratus-web run dev",
+    "dev:mobile": "pnpm --filter paratus-mobile run dev"
   },
   "devDependencies": {
     "@paratus/prettier-config": "workspace:*",

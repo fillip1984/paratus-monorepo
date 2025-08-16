@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { Image } from "expo-image";
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
@@ -6,8 +6,12 @@ import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { trpc } from "@/utils/api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function TabTwoScreen() {
+  // const queryClient = useQueryClient();
+  const collections = useQuery(trpc.collection.readAll.queryOptions());
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -26,6 +30,12 @@ export default function TabTwoScreen() {
       <ThemedText>
         This app includes example code to help you get started.
       </ThemedText>
+      <Text>{collections.data?.length} collections found</Text>
+      <View>
+        {collections.data?.map((collection) => (
+          <Text key={collection.id}>${collection.name}</Text>
+        ))}
+      </View>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{" "}
