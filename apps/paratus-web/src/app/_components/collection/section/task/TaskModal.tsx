@@ -1,21 +1,20 @@
 "use client";
 
-// import type { PriorityOption } from "@prisma/client";
-import { useEffect, useState } from "react";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import type { PriorityOption } from "@prisma/client";
+import { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 import { FaEllipsis, FaPlus, FaX } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
-
-// import PriorityPicker from "./PriorityPicker";
-import type { TaskDetailType } from "@paratus/api";
-
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
+
 import AddTaskCard from "./AddTaskCard";
 import DatePicker from "./DatePicker";
+import PriorityPicker from "./PriorityPicker";
 import SectionPicker from "./SectionPicker";
 import TaskListRow from "./TaskCard";
+import type { TaskDetailType } from "~/trpc/types";
 
 export default function TaskModal({
   collectionId,
@@ -26,8 +25,8 @@ export default function TaskModal({
   task: TaskDetailType;
   dismiss: () => void;
 }) {
-  // const textEditingRef = useRef<HTMLInputElement>(null);
-  // const descriptionEditingRef = useRef<HTMLTextAreaElement>(null);
+  const textEditingRef = useRef<HTMLInputElement>(null);
+  const descriptionEditingRef = useRef<HTMLTextAreaElement>(null);
   const [
     isEditingTextOrDescriptionTarget,
     setIsEditingTextOrDescriptionTarget,
@@ -46,21 +45,21 @@ export default function TaskModal({
     setDescription(task.description ?? "");
   }, [task]);
 
-  // useEffect(() => {
-  //   if (isEditingTextOrDescriptionTarget === "text") {
-  //     textEditingRef.current?.focus();
-  //   } else if (isEditingTextOrDescriptionTarget === "description") {
-  //     descriptionEditingRef.current?.focus();
-  //     descriptionEditingRef.current?.setSelectionRange(
-  //       descriptionEditingRef.current.value.length,
-  //       descriptionEditingRef.current.value.length,
-  //     );
-  //   }
-  // }, [isEditingTextOrDescriptionTarget]);
+  useEffect(() => {
+    if (isEditingTextOrDescriptionTarget === "text") {
+      textEditingRef.current?.focus();
+    } else if (isEditingTextOrDescriptionTarget === "description") {
+      descriptionEditingRef.current?.focus();
+      descriptionEditingRef.current?.setSelectionRange(
+        descriptionEditingRef.current.value.length,
+        descriptionEditingRef.current.value.length,
+      );
+    }
+  }, [isEditingTextOrDescriptionTarget]);
 
-  // const trpc = api.useUtils();
+  const trpc = api.useUtils();
   const { mutate: deleteTask } = api.task.delete.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("task deleted");
       dismiss();
       // await queryClient.invalidateQueries({
@@ -126,9 +125,9 @@ export default function TaskModal({
     updateTask({ ...task, dueDate: date ?? null });
   };
 
-  // const handlePriorityUpdate = (priority: PriorityOption | null) => {
-  //   updateTask({ ...task, priority: priority });
-  // };
+  const handlePriorityUpdate = (priority: PriorityOption | null) => {
+    updateTask({ ...task, priority: priority });
+  };
 
   const { mutate: reorderTasks } = api.task.reorder.useMutation({
     onSuccess: async () => {
@@ -232,13 +231,13 @@ export default function TaskModal({
                     type="text"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
-                    // ref={textEditingRef}
+                    ref={textEditingRef}
                     placeholder="Task..."
                   />
                   <TextareaAutosize
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    // ref={descriptionEditingRef}
+                    ref={descriptionEditingRef}
                     placeholder="Description..."
                     className="text-muted m-0 border-0 bg-inherit p-0 text-xs"
                   ></TextareaAutosize>
@@ -279,7 +278,7 @@ export default function TaskModal({
             </div>
           </div>
           <div className="mt-4 ml-6 flex flex-col">
-            {task.children.length > 0 && (
+            {task.children && task.children.length > 0 && (
               <button
                 type="button"
                 onClick={() => setIsCollapsed((prev) => !prev)}
@@ -345,10 +344,10 @@ export default function TaskModal({
           </div>
           <div className="border-b-muted flex flex-col gap-1 border-b-1 p-2">
             <span className="text-sm font-bold">Priority</span>
-            {/* <PriorityPicker
+            <PriorityPicker
               value={task.priority}
               setValue={(priority) => handlePriorityUpdate(priority)}
-            /> */}
+            />
           </div>
         </aside>
       </div>

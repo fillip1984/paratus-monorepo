@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import { GiSettingsKnobs } from "react-icons/gi";
-
+import type { CollectionDetailType } from "~/trpc/types";
 import CollectionListView from "./CollectionListView";
 import PopupMenu from "../ui/popupMenu";
 import { RiKanbanView2 } from "react-icons/ri";
 import CollectionKanbanView from "./CollectionKanbanView";
-import type { CollectionDetailType } from "@paratus/api";
 
 export default function CollectionView({
   collection,

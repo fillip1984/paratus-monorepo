@@ -3,7 +3,7 @@
 import { format, isSameDay, startOfDay } from "date-fns";
 
 import { api } from "~/trpc/react";
-import type { SectionDetailType, CollectionDetailType } from "@paratus/api";
+import type { SectionDetailType, CollectionDetailType } from "~/trpc/types";
 import CollectionView from "../_components/collection/CollectionView";
 
 export default function TodayPage() {

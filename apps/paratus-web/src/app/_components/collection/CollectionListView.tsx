@@ -1,6 +1,6 @@
 "use client";
 
-import type { CollectionDetailType } from "@paratus/api";
+import type { CollectionDetailType } from "~/trpc/types";
 import SectionCard from "./section/SectionCard";
 
 export default function CollectionListView({

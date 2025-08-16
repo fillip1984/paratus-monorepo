@@ -11,9 +11,8 @@ import {
 import { useState } from "react";
 
 import { api } from "~/trpc/react";
-
+import type { CollectionDetailType, SectionDetailType } from "~/trpc/types";
 import CollectionView from "../_components/collection/CollectionView";
-import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 
 export default function UpcomingPage() {
   const [today] = useState(new Date());

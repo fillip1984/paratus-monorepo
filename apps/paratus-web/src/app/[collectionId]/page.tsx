@@ -1,10 +1,10 @@
 "use client";
 
-import { use } from "react";
-import { notFound } from "next/navigation";
-
+import { useQuery } from "@tanstack/react-query";
 import { api } from "~/trpc/react";
 import CollectionView from "../_components/collection/CollectionView";
+import { notFound } from "next/navigation";
+import { use } from "react";
 import LoadOrRetry from "../_components/shared/LoadOrRetry";
 
 export default function CollectionPage({
@@ -13,20 +13,13 @@ export default function CollectionPage({
   params: Promise<{ collectionId: string }>;
 }) {
   const { collectionId } = use(params);
-  console.log({ collectionId });
-  // const trpc = api.useUtils();
-  // const {
-  //   data: collection,
-  //   isLoading,
-  //   isError,
-  //   refetch: retry,
-  // } = useQuery(trpc.collection.readOne.queryOptions({ id: collectionId }));
+  const trpc = api.useUtils();
   const {
     data: collection,
     isLoading,
     isError,
     refetch: retry,
-  } = api.collection.readOne.useQuery({ id: collectionId });
+  } = useQuery(trpc.collection.readOne.queryOptions({ id: collectionId }));
 
   if (isLoading || isError) {
     return (
