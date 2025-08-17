@@ -199,7 +199,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api
       '@prisma/client':
-        specifier: ^6.5.0
+        specifier: 'catalog:'
         version: 6.13.0(prisma@6.13.0(typescript@5.9.2))(typescript@5.9.2)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
@@ -208,13 +208,13 @@ importers:
         specifier: ^5.69.0
         version: 5.84.2(react@19.0.0)
       '@trpc/client':
-        specifier: ^11.0.0
+        specifier: 'catalog:'
         version: 11.0.0(@trpc/server@11.0.0(typescript@5.9.2))(typescript@5.9.2)
       '@trpc/server':
-        specifier: ^11.0.0
+        specifier: 'catalog:'
         version: 11.0.0(typescript@5.9.2)
       '@trpc/tanstack-react-query':
-        specifier: ^11.0.0
+        specifier: 'catalog:'
         version: 11.0.0(@tanstack/react-query@5.84.2(react@19.0.0))(@trpc/client@11.0.0(@trpc/server@11.0.0(typescript@5.9.2))(typescript@5.9.2))(@trpc/server@11.0.0(typescript@5.9.2))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.9.2)
       '@xobotyi/scrollbar-width':
         specifier: ^1.9.5
