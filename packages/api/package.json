@@ -21,8 +21,8 @@
   "dependencies": {
     "@paratus/db": "workspace:*",
     "@trpc/server": "catalog:",
-    "date-fns": "^4.1.0",
-    "superjson": "2.2.2",
+    "date-fns": "catalog:",
+    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
