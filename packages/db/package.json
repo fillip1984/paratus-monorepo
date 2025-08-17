@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
-    "zod": "^3.25.76"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@paratus/eslint-config": "workspace:*",

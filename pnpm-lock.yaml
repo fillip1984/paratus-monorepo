@@ -318,8 +318,8 @@ importers:
         specifier: ^6.13.0
         version: 6.13.0(prisma@6.13.0(typescript@5.9.2))(typescript@5.9.2)
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: 'catalog:'
+        version: 4.0.17
     devDependencies:
       '@paratus/eslint-config':
         specifier: workspace:*
