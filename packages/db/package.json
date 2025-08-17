@@ -22,23 +22,24 @@
   },
   "scripts": {
     "build": "tsc",
-    "postinstall": "prisma generate",
-    "generate": "prisma generate",
-    "push": "prisma db push",
-    "studio": "prisma studio"
+    "postinstall": "pnpm with-env prisma generate",
+    "generate": "pnpm with-env prisma generate",
+    "push": "pnpm with-env prisma db push",
+    "studio": "pnpm with-env prisma studio",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/client": "^6.13.0",
+    "@prisma/client": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@paratus/eslint-config": "workspace:*",
     "@paratus/prettier-config": "workspace:*",
     "@paratus/tsconfig": "workspace:*",
-    "dotenv-cli": "^8.0.0",
+    "dotenv-cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
-    "prisma": "^6.13.0",
+    "prisma": "catalog:",
     "typescript": "catalog:"
   },
   "prettier": "@paratus/prettier-config"

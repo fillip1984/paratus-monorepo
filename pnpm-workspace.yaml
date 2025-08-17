@@ -7,6 +7,8 @@ catalog:
   dotenv-cli: ^8.0.0
   eslint: ^9.33.0
   prettier: ^3.6.2
+  prisma: 6.13.0
+  "@prisma/client": 6.13.0
   superjson: ^2.2.2
   tailwindcss: ^4.1.12
   typescript: ^5.9.2
