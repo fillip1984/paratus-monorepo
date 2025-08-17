@@ -1,9 +1,10 @@
 import "~/styles/globals.css";
 
-import { type Metadata } from "next";
+import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import SideNav from "./_components/shared/SideNav";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -20,9 +21,17 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html
+      lang="en"
+      className={`${geist.variable} bg-background overflow-hidden text-white`}
+    >
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <main className="flex h-screen overflow-hidden">
+            <SideNav />
+            <div className="flex flex-1 overflow-hidden">{children}</div>
+          </main>
+        </TRPCReactProvider>
       </body>
     </html>
   );

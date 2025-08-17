@@ -1,4 +1,4 @@
-// import { PriorityOption } from "@prisma/client";
+import PriorityOption from "@prisma/client";
 import { endOfDay, startOfDay } from "date-fns";
 import { z } from "zod/v4";
 
@@ -93,7 +93,19 @@ export const taskRouter = createTRPCRouter({
         text: z.string().min(1),
         description: z.string().nullish(),
         dueDate: z.date().nullish(),
-        // priority: z.nativeEnum(PriorityOption).nullish(),
+        priority: z
+          .enum([
+            PriorityOption.PriorityOption.HIGH,
+            PriorityOption.PriorityOption.HIGHEST,
+            PriorityOption.PriorityOption.IMPORTANT,
+            PriorityOption.PriorityOption.LOW,
+            PriorityOption.PriorityOption.LOWEST,
+            PriorityOption.PriorityOption.MEDIUM,
+            PriorityOption.PriorityOption.URGENT,
+            PriorityOption.PriorityOption.IMPORTANT,
+            PriorityOption.PriorityOption.URGENT_AND_IMPORTANT,
+          ])
+          .nullish(),
         sectionId: z.string().min(1),
         parentTaskId: z.string().nullish(),
       }),
@@ -141,7 +153,19 @@ export const taskRouter = createTRPCRouter({
         complete: z.boolean(),
         position: z.number(),
         dueDate: z.date().nullish(),
-        // priority: z.nativeEnum(PriorityOption).nullish(),
+        priority: z
+          .enum([
+            PriorityOption.PriorityOption.HIGH,
+            PriorityOption.PriorityOption.HIGHEST,
+            PriorityOption.PriorityOption.IMPORTANT,
+            PriorityOption.PriorityOption.LOW,
+            PriorityOption.PriorityOption.LOWEST,
+            PriorityOption.PriorityOption.MEDIUM,
+            PriorityOption.PriorityOption.URGENT,
+            PriorityOption.PriorityOption.IMPORTANT,
+            PriorityOption.PriorityOption.URGENT_AND_IMPORTANT,
+          ])
+          .nullish(),
         sectionId: z.string().min(1),
       }),
     )
