@@ -16,7 +16,8 @@
     "clean": "pnpm -r run clean",
     "dev": "pnpm -r run dev",
     "dev:web": "pnpm --filter paratus-web run dev",
-    "dev:mobile": "pnpm --filter paratus-mobile run dev"
+    "dev:mobile": "pnpm --filter paratus-mobile run dev",
+    "prod:db:push": "pnpm dotenv -e .env.prod -- prisma db push"
   },
   "devDependencies": {
     "@paratus/prettier-config": "workspace:*",
