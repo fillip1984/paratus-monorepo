@@ -18,6 +18,9 @@ catalogs:
     '@trpc/tanstack-react-query':
       specifier: 11.4.4
       version: 11.4.4
+    '@types/node':
+      specifier: ^22.13.14
+      version: 22.17.2
     eslint:
       specifier: ^9.33.0
       version: 9.33.0
@@ -395,15 +398,15 @@ importers:
         specifier: 'catalog:'
         version: 3.6.2
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.6
+        specifier: ^0.6.14
         version: 0.6.14(@ianvs/prettier-plugin-sort-imports@4.6.1(prettier@3.6.2))(prettier@3.6.2)
     devDependencies:
       '@paratus/tsconfig':
         specifier: workspace:*
         version: link:../typescript
       '@types/node':
-        specifier: ^20.14.15
-        version: 20.19.10
+        specifier: 'catalog:'
+        version: 22.17.2
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -1763,6 +1766,9 @@ packages:
 
   '@types/node@20.8.5':
     resolution: {integrity: sha512-SPlobFgbidfIeOYlzXiEjSYeIJiOCthv+9tSQVpvk4PAdIIc+2SmjNVzWXk9t0Y7dl73Zdf+OgXKHX9XtkqUpw==}
+
+  '@types/node@22.17.2':
+    resolution: {integrity: sha512-gL6z5N9Jm9mhY+U2KXZpteb+09zyffliRkZyZOHODGATyC5B1Jt/7TzuuiLkFsSUMLbS1OLmlj/E+/3KF4Q/4w==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -6893,6 +6899,10 @@ snapshots:
   '@types/node@20.8.5':
     dependencies:
       undici-types: 5.25.3
+
+  '@types/node@22.17.2':
+    dependencies:
+      undici-types: 6.21.0
 
   '@types/normalize-package-data@2.4.4': {}
 
