@@ -41,5 +41,4 @@ jobs:
           # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          npx prisma generate
           pnpm run build:web
