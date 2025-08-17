@@ -3,9 +3,12 @@ packages:
   - packages/*
   - tooling/*
 catalog:
+  date-fns: ^4.1.0
+  dotenv-cli: ^8.0.0
   eslint: ^9.33.0
   prettier: ^3.6.2
-  tailwindcss: ^4.1.11
+  superjson: ^2.2.2
+  tailwindcss: ^4.1.12
   typescript: ^5.9.2
   zod: ^4.0.17
   "@tanstack/react-query": 5.84.2
