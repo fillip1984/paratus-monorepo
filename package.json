@@ -24,5 +24,8 @@
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@paratus/prettier-config"
+  "prettier": "@paratus/prettier-config",
+  "prisma": {
+    "schema": "packages/db/prisma/schema.prisma"
+  }
 }
