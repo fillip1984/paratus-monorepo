@@ -186,12 +186,12 @@ importers:
       '@trpc/client':
         specifier: ^11.0.0
         version: 11.0.0(@trpc/server@11.0.0(typescript@5.8.3))(typescript@5.8.3)
-      '@trpc/react-query':
-        specifier: ^11.0.0
-        version: 11.4.4(@tanstack/react-query@5.84.2(react@19.0.0))(@trpc/client@11.0.0(@trpc/server@11.0.0(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.0.0(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.3)
       '@trpc/server':
         specifier: ^11.0.0
         version: 11.0.0(typescript@5.8.3)
+      '@trpc/tanstack-react-query':
+        specifier: ^11.0.0
+        version: 11.4.4(@tanstack/react-query@5.84.2(react@19.0.0))(@trpc/client@11.0.0(@trpc/server@11.0.0(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.0.0(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.3)
       '@xobotyi/scrollbar-width':
         specifier: ^1.9.5
         version: 1.9.5
