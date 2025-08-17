@@ -8,18 +8,24 @@
   "packageManager": "pnpm@10.11.1",
   "scripts": {
     "build": "pnpm -r run build",
-    "build:web": "pnpm --filter !paratus-mobile run build",
     "build:mobile": "pnpm --filter !paratus-web run build",
-    "db:studio": "pnpm --filter db run studio",
+    "build:web": "pnpm --filter !paratus-mobile run build",
+    "clean": "pnpm -r run clean",
     "db:generate": "pnpm --filter db run generate",
     "db:push": "pnpm --filter db run push",
-    "clean": "pnpm -r run clean",
+    "db:studio": "pnpm --filter db run studio",
     "dev": "pnpm -r run dev",
+    "dev:mobile": "pnpm --filter paratus-mobile run dev",
     "dev:web": "pnpm --filter paratus-web run dev",
-    "dev:mobile": "pnpm --filter paratus-mobile run dev"
+    "prod:db:push": "pnpm dotenv -e .env.prod -- prisma db push",
+    "prod:deploy": "pnpm dotenv -e .env.prod -- sst deploy --stage prod"
+  },
+  "dependencies": {
+    "sst": "3.17.10"
   },
   "devDependencies": {
     "@paratus/prettier-config": "workspace:*",
+    "@types/aws-lambda": "8.10.152",
     "dotenv-cli": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
