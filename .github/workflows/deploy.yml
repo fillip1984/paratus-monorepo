@@ -31,4 +31,4 @@ jobs:
         # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         # DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          build:web
+          pnpm run build:web
