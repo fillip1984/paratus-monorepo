@@ -13,6 +13,9 @@ export default $config({
     new sst.aws.Nextjs("paratus", {
       domain: "paratus.illizen.com",
       path: "./apps/paratus-web",
+      server: {
+        runtime: "nodejs22.x",
+      },
       environment: {
         DATABASE_URL: process.env.DATABASE_URL,
       },
