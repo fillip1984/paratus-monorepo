@@ -4,7 +4,7 @@ import { FaFlag, FaRegFlag } from "react-icons/fa";
 
 import PopupMenu from "~/app/_components/ui/popupMenu";
 
-type PriorityType = {
+type PriorityPickerType = {
   label: string;
   shortLabel: string | null;
   value: PriorityOption | null;
@@ -45,7 +45,7 @@ export default function PriorityPicker({
   setValue: (value: PriorityOption | null) => void;
 }) {
   const [priorityPickerValue, setPriorityPickerValue] =
-    useState<PriorityType | null>(
+    useState<PriorityPickerType | null>(
       value ? (priorities.find((p) => p.value === value) ?? null) : null,
     );
 
@@ -57,7 +57,7 @@ export default function PriorityPicker({
   }, [value, priorityPickerValue?.value]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const handleUpdate = (newValue: PriorityType | null) => {
+  const handleUpdate = (newValue: PriorityPickerType | null) => {
     console.log({ newValue });
     setPriorityPickerValue(newValue);
     setValue(newValue ? newValue.value : null);

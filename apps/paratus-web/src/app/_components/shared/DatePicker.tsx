@@ -17,7 +17,7 @@ import { MdOutlineWeekend } from "react-icons/md";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { capitalizeFirstLetter } from "~/utils/string";
 
-type DateType = {
+type DatePickerType = {
   label: string;
   value: Date | null;
   icon: React.ReactNode;
@@ -57,7 +57,8 @@ export default function DatePicker({
   value: Date | null;
   setValue: (value: Date | null) => void;
 }) {
-  const [datePickerValue, setDatePickerValue] = useState<DateType | null>();
+  const [datePickerValue, setDatePickerValue] =
+    useState<DatePickerType | null>();
   useEffect(() => {
     // console.log('useEffect for value change. dpv: ', datePickerValue, value)
     if (value && datePickerValue?.value !== value) {
@@ -78,7 +79,7 @@ export default function DatePicker({
   }, [value, datePickerValue?.value]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const handleUpdate = (date: DateType | null) => {
+  const handleUpdate = (date: DatePickerType | null) => {
     setDatePickerValue(date);
     setValue(date ? date.value : null);
     setIsOpen(false);

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { FaAngleDown, FaInbox } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa";
 import { RxSection } from "react-icons/rx";
-
-import type { CollectionSummaryType, SectionSummaryType } from "@paratus/api";
 
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
 
 type SectionPickerType = {
-  label: React.ReactNode;
+  id: string;
+  selectedLabel: React.ReactNode;
+  dropDownLabel: React.ReactNode;
+  searchableLabel: string;
   value: string;
+  indented: boolean;
 };
 
 export default function SectionPicker({
@@ -21,99 +23,90 @@ export default function SectionPicker({
 }) {
   const [sectionPickerValue, setSectionPickerValue] =
     useState<SectionPickerType | null>(null);
+  const [sectionPickerOptions, setSectionPickerOptions] = useState<
+    SectionPickerType[]
+  >([]);
 
   const { data: collections } = api.collection.readAll.useQuery();
-  const [inbox, setInbox] = useState<SectionPickerType | null>(null);
   useEffect(() => {
-    // initialization inbox
+    // console.log("Initializing section options");
     if (!collections) return;
-    if (!inbox) {
-      // console.log('CollectionSectionPicker: setting inbox')
-      const inboxCollection = collections.find((c) => c.name === "Inbox");
-      // console.log('inboxCollection found', inboxCollection)
-      if (inboxCollection) {
-        const uncategorizedSection = inboxCollection.sections.find(
-          (s) => s.name === "Uncategorized",
-        );
-        // console.log('uncategorizedSection found', uncategorizedSection)
-        if (uncategorizedSection) {
-          setInbox({
-            label: (
-              <span className="flex items-center gap-2">
-                <FaInbox /> Inbox
-              </span>
+
+    const options = collections.map((c) => {
+      const sections: SectionPickerType[] = [];
+      c.sections.forEach((s) => {
+        if (s.name === "Uncategorized") {
+          sections.push({
+            id: s.id,
+            dropDownLabel: `# ${c.name}`,
+            selectedLabel: `# ${c.name}`,
+            searchableLabel: `# ${c.name}`.toLowerCase(),
+            value: s.id,
+            indented: false,
+          });
+        } else {
+          sections.push({
+            id: s.id,
+            dropDownLabel: (
+              <div className="flex items-center gap-2">
+                <RxSection />
+                {s.name}
+              </div>
             ),
-            value: uncategorizedSection.id,
+            selectedLabel: (
+              <div className="flex items-center gap-2">
+                # {c.name} <RxSection />
+                {s.name}
+              </div>
+            ),
+            searchableLabel: `# ${c.name} ${s.name}`.toLowerCase(),
+            value: s.id,
+            indented: true,
           });
         }
-      }
-    }
-  }, [collections, inbox]);
-  useEffect(() => {
-    // wait for collections and inbox to be fetched and set
-    if (!collections || !inbox) return;
-
-    // console.log('initialization and default picker', value)
-    if (!value || value === "today" || value === "inbox") {
-      console.log(
-        "no suitable suggested section given, default to inbox. Given suggested value:",
-        value,
-      );
-      setSectionPickerValue(inbox);
-      return;
-    }
-
-    let collection: CollectionSummaryType | undefined;
-    let section: SectionSummaryType | undefined;
-    collections.forEach((c) => {
-      const result = c.sections.find((s) => s.id === value);
-      if (result) {
-        collection = c;
-        section = result;
-        return false;
-      }
-    });
-    if (!collection || !section) {
-      console.error({
-        msg: "Couldn't find section so can't default section picker. This shouldn't happen!",
-        collectionName: collection?.name,
-        sectionId: section?.id,
-        value,
       });
-      return;
-    }
-
-    if (collection.name === "Inbox") {
-      setSectionPickerValue(inbox);
-      return;
-    }
-
-    setSectionPickerValue({
-      label: (
-        <span className="flex items-center gap-2">
-          # {collection.name}{" "}
-          {section.name !== "Uncategorized" ? (
-            <>
-              / <RxSection />
-              {section.name}
-            </>
-          ) : (
-            ""
-          )}
-        </span>
-      ),
-      value: section.id,
+      return sections;
     });
-  }, [value, collections, inbox]);
+    setSectionPickerOptions(options.flat());
+  }, [collections]);
+
+  useEffect(() => {
+    // console.log("Setting section Picker option initially on first visit");
+    if (sectionPickerOptions.length === 0) return;
+    const sectionPickerOption = sectionPickerOptions.find(
+      (s) => s.id === value,
+    );
+    if (sectionPickerOption) {
+      setSectionPickerValue(sectionPickerOption);
+    }
+  }, [sectionPickerOptions, value]);
+
+  // filter state
+  const [search, setSearch] = useState("");
+  const [filteredSectionPickerOptions, setFilteredSectionPickerOptions] =
+    useState<SectionPickerType[]>([]);
+  useEffect(() => {
+    if (!search) {
+      setFilteredSectionPickerOptions(sectionPickerOptions);
+    } else {
+      const searchLowercase = search.toLowerCase();
+      // console.log(`Filtering down to:`, searchLowercase);
+      setFilteredSectionPickerOptions(
+        sectionPickerOptions.filter((s) => {
+          return s.searchableLabel.includes(searchLowercase);
+        }),
+      );
+    }
+  }, [search, sectionPickerOptions]);
 
   const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    if (sectionPickerValue && sectionPickerValue.value !== value) {
-      // console.log("only update section if there's a change in the value")
-      setValue(sectionPickerValue.value);
+  const handleUpdate = (section: SectionPickerType | null) => {
+    if (section && section.value !== value) {
+      setSectionPickerValue(section);
+      setValue(section.value);
       setIsOpen(false);
     }
-  }, [sectionPickerValue, sectionPickerValue?.value, setValue, value]);
+  };
 
   return (
     <PopupMenu
@@ -124,101 +117,31 @@ export default function SectionPicker({
           type="button"
           className="text-white/60] flex items-center gap-2 rounded border border-white/30 px-2 py-1 text-sm"
         >
-          {sectionPickerValue?.label} <FaAngleDown />
+          {sectionPickerValue?.selectedLabel} <FaAngleDown />
         </button>
       }
       content={
         <div className="bg-foreground flex flex-col gap-1 rounded-lg p-2">
-          <input type="search" className="rounded border" />
-          {inbox &&
-            collections
-              ?.filter((c) => c.name === "Inbox")
-              .map((collection) => (
-                <div key={collection.id} className="flex flex-col gap-1 p-1">
-                  {collection.sections.map((section, i) => (
-                    <div key={`${collection.id}-${i}`} className="w-full">
-                      {section.name === "Uncategorized" ? (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSectionPickerValue(inbox);
-                          }}
-                          className="hover:bg-secondary/30 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
-                        >
-                          {inbox.label}
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSectionPickerValue({
-                              value: section.id,
-                              label: (
-                                <span className="flex items-center gap-2">
-                                  # {collection.name} / <RxSection />
-                                  {section.name}
-                                </span>
-                              ),
-                            });
-                          }}
-                          className="hover:bg-secondary/30 ml-2 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
-                        >
-                          <RxSection />
-                          {section.name}
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))}
-          <span>Collections</span>
-          {collections
-            ?.filter((c) => c.name !== "Inbox")
-            .map((collection) => (
-              <div key={collection.id} className="flex flex-col gap-1 p-1">
-                {collection.sections.map((section, i) => (
-                  <div key={`${collection.id}-${i}`} className="w-full">
-                    {section.name === "Uncategorized" ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSectionPickerValue({
-                            value: section.id,
-                            label: `# ${collection.name}`,
-                          });
-                        }}
-                        className="hover:bg-secondary/30 flex w-full rounded px-2 py-1 text-xs"
-                      >
-                        # {collection.name}
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSectionPickerValue({
-                            value: section.id,
-                            label: (
-                              <span className="flex items-center gap-2">
-                                # {collection.name} / <RxSection />
-                                {section.name}
-                              </span>
-                            ),
-                          });
-                        }}
-                        className="hover:bg-secondary/30 ml-2 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
-                      >
-                        <RxSection />
-                        {section.name}
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="rounded border"
+          />
+          {filteredSectionPickerOptions.map((section, i) => (
+            <div key={`${section.id}-${i}`} className="w-full">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdate(section);
+                }}
+                className={`hover:bg-secondary/30 flex w-full rounded px-2 py-1 text-xs ${section.indented ? "pl-4" : ""}`}
+              >
+                {section.dropDownLabel}
+              </button>
+            </div>
+          ))}
         </div>
       }
     ></PopupMenu>
