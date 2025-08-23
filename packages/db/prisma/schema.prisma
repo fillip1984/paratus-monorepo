@@ -16,12 +16,14 @@ model Collection {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    name     String
-    position Int
+    name String
+
+    preferredView String @default("list") // e.g. "board", "list", "calendar", etc.
 
     parent   Collection?  @relation("CollectionRelations", fields: [parentId], references: [id], onDelete: Cascade)
     parentId String?
     children Collection[] @relation("CollectionRelations")
+    position Int
 
     sections Section[]
 }

@@ -9,6 +9,7 @@ export const collectionRouter = createTRPCRouter({
       select: {
         id: true,
         name: true,
+        preferredView: true,
         position: true,
         parentId: true,
         children: {
@@ -92,6 +93,7 @@ export const collectionRouter = createTRPCRouter({
       z.object({
         id: z.string().min(1),
         name: z.string().min(1),
+        preferredView: z.string().min(1),
         parentId: z.string().nullish(),
         position: z.number(),
       }),
@@ -103,6 +105,7 @@ export const collectionRouter = createTRPCRouter({
         },
         data: {
           name: input.name,
+          preferredView: input.preferredView,
           parentId: input.parentId,
           position: input.position,
         },
@@ -156,6 +159,7 @@ async function fetchCollection(id: string, ctx: trpcContextShape) {
     select: {
       id: true,
       name: true,
+      preferredView: true,
       position: true,
       sections: {
         orderBy: {

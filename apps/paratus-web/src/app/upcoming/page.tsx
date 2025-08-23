@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   eachDayOfInterval,
   format,
@@ -8,10 +9,10 @@ import {
   previousSunday,
   startOfDay,
 } from "date-fns";
-import { useState } from "react";
+
+import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 
 import { api } from "~/trpc/react";
-import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 import CollectionView from "../_components/collection/CollectionView";
 
 export default function UpcomingPage() {
@@ -60,6 +61,7 @@ export default function UpcomingPage() {
   const upcoming = {
     name: "Upcoming",
     id: "Upcoming",
+    preferredView: "list",
     sections: [overdueSection, ...daysAsSections],
     position: -1,
   } satisfies CollectionDetailType;
