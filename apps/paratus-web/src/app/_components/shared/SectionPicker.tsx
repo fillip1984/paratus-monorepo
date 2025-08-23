@@ -54,7 +54,7 @@ export default function SectionPicker({
     if (!collections || !inbox) return;
 
     // console.log('initialization and default picker', value)
-    if (!value || value === "today") {
+    if (!value || value === "today" || value === "inbox") {
       console.log(
         "no suitable suggested section given, default to inbox. Given suggested value:",
         value,
@@ -74,9 +74,12 @@ export default function SectionPicker({
       }
     });
     if (!collection || !section) {
-      console.error(
-        "Couldn't find section so can't default section picker. This shouldn't happen!",
-      );
+      console.error({
+        msg: "Couldn't find section so can't default section picker. This shouldn't happen!",
+        collectionName: collection?.name,
+        sectionId: section?.id,
+        value,
+      });
       return;
     }
 

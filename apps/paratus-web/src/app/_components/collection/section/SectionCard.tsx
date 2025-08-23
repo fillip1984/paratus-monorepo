@@ -11,7 +11,7 @@ import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 
 import { api } from "~/trpc/react";
 import { isNewSectionAvailable } from "~/utils/collection";
-import { isPermanentSection } from "~/utils/section";
+import { isAddTaskAvailable, isPermanentSection } from "~/utils/section";
 import PopupMenu from "../../ui/popupMenu";
 import AddSectionCard from "./AddSectionCard";
 import AddTaskCard from "./task/AddTaskCard";
@@ -26,16 +26,22 @@ export default function SectionCard({
 }) {
   // determine default due date
   const [defaultDueDate, setDefaultDueDate] = useState<Date | null>(null);
+  const [defaultSectionId, setDefaultSectionId] = useState<string>(
+    section.id ?? "inbox",
+  );
   const path = usePathname();
   useEffect(() => {
     if (path === "/today") {
       setDefaultDueDate(startOfDay(new Date()));
+      setDefaultSectionId("inbox");
     } else if (path === "/upcoming") {
+      console.log({ collectionName: collection.name, sectionId: section.id });
       const dd = new Date(Number(section.id));
       console.log(dd);
       setDefaultDueDate(dd);
+      setDefaultSectionId("inbox");
     }
-  }, [path, section.id]);
+  }, [collection.name, path, section.id]);
 
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSectionCollapsed, setIsSectionCollapsed] = useState(false);
@@ -78,24 +84,26 @@ export default function SectionCard({
                 />
               ))}
             </div>
-            <div className="my-2">
-              {isAddTaskOpen ? (
-                <AddTaskCard
-                  currentCollectionId={section.collectionId}
-                  currentSectionId={section.id}
-                  defaultDueDate={defaultDueDate}
-                  dismiss={() => setIsAddTaskOpen((prev) => !prev)}
-                />
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsAddTaskOpen((prev) => !prev)}
-                  className="flex items-center gap-2 rounded p-1 font-thin hover:bg-white/10"
-                >
-                  <FaPlus className="text-primary" /> Add task
-                </button>
-              )}
-            </div>
+            {isAddTaskAvailable(collection.name, section.name) && (
+              <div className="my-2">
+                {isAddTaskOpen ? (
+                  <AddTaskCard
+                    currentCollectionId={section.collectionId}
+                    defaultDueDate={defaultDueDate}
+                    defaultSectionId={defaultSectionId}
+                    dismiss={() => setIsAddTaskOpen((prev) => !prev)}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsAddTaskOpen((prev) => !prev)}
+                    className="flex items-center gap-2 rounded p-1 font-thin hover:bg-white/10"
+                  >
+                    <FaPlus className="text-primary" /> Add task
+                  </button>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

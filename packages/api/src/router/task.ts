@@ -170,6 +170,7 @@ export const taskRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log({ msg: "priority for update", priority: input.priority });
       return await ctx.db.task.update({
         where: {
           id: input.id,
@@ -180,7 +181,7 @@ export const taskRouter = createTRPCRouter({
           complete: input.complete,
           position: input.position,
           dueDate: input.dueDate,
-          // priority: input.priority,
+          priority: input.priority,
           sectionId: input.sectionId,
         },
       });

@@ -25,20 +25,11 @@ export default function TaskCard({
   const trpc = api.useUtils();
   const { mutate: updateTask } = api.task.update.useMutation({
     onSuccess: async () => {
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.task.today.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readAll.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.inbox.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readOne.queryKey({
-      //     id: collectionId,
-      //   }),
-      // });
+      void trpc.collection.invalidate();
+      void trpc.task.invalidate();
+      void trpc.collection.readOne.invalidate({
+        id: collectionId,
+      });
     },
   });
 

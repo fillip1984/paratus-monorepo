@@ -13,3 +13,10 @@ export const isPermanentSection = (
     sectionName === "Overdue"
   );
 };
+
+export const isAddTaskAvailable = (
+  collectionName: string,
+  sectionName: string,
+): boolean => {
+  return sectionName !== "Overdue";
+};

@@ -10,15 +10,17 @@ import { api } from "~/trpc/react";
 
 export default function AddTaskCard({
   currentCollectionId,
-  currentSectionId,
+  // currentSectionId,
   parentTaskId,
   defaultDueDate,
+  defaultSectionId,
   dismiss,
 }: {
   currentCollectionId: string;
-  currentSectionId: string;
+  // currentSectionId: string;
   parentTaskId?: string | null;
-  defaultDueDate?: Date | null;
+  defaultDueDate: Date | null;
+  defaultSectionId: string;
   dismiss: () => void;
 }) {
   // steal focus
@@ -30,7 +32,7 @@ export default function AddTaskCard({
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<Date | null>(defaultDueDate ?? null);
   const [priority, setPriority] = useState<PriorityOption | null>(null);
-  const [sectionId, setSectionId] = useState<string | null>(currentSectionId);
+  const [sectionId, setSectionId] = useState<string | null>(defaultSectionId);
   const [isFormValid, setIsFormValid] = useState(false);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -47,7 +49,7 @@ export default function AddTaskCard({
     setDescription("");
     setDueDate(defaultDueDate ?? null);
     setPriority(null);
-    setSectionId(currentSectionId);
+    // setSectionId(currentSectionId);
     setIsFormValid(false);
     formRef.current?.querySelector("input")?.focus();
   };
@@ -56,10 +58,11 @@ export default function AddTaskCard({
   const { mutate: createTask } = api.task.create.useMutation({
     onSuccess: async () => {
       void trpc.collection.invalidate();
-      resetForm();
+      void trpc.task.invalidate();
       void trpc.collection.readOne.invalidate({
         id: currentCollectionId,
       });
+      resetForm();
     },
   });
 
