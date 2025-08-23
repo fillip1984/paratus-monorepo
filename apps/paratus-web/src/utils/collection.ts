@@ -5,3 +5,7 @@ export const isNewSectionAvailable = (
 ): boolean => {
   return collection.name !== "Today" && collection.name !== "Upcoming";
 };
+
+export const isPermanentCollection = (name: string): boolean => {
+  return name === "Inbox" || name === "Today" || name === "Upcoming";
+};

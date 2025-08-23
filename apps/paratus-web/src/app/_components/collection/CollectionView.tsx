@@ -1,11 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { FaTrash } from "react-icons/fa6";
 import { GiSettingsKnobs } from "react-icons/gi";
 import { RiKanbanView2 } from "react-icons/ri";
 
 import type { CollectionDetailType } from "@paratus/api";
 
 import { api } from "~/trpc/react";
+import { isPermanentCollection } from "~/utils/collection";
 import PopupMenu from "../ui/popupMenu";
 import CollectionKanbanView from "./CollectionKanbanView";
 import CollectionListView from "./CollectionListView";
@@ -44,19 +47,26 @@ const CollectionSettings = ({
   collection: CollectionDetailType;
 }) => {
   const trpc = api.useUtils();
-  const { mutate } = api.collection.update.useMutation({
+  const { mutate: updateMutate } = api.collection.update.useMutation({
     onSuccess: () => {
       void trpc.collection.invalidate();
     },
   });
-
   const handleViewToggle = () => {
     if (collection.preferredView === "kanban") {
-      mutate({ ...collection, preferredView: "list" });
+      updateMutate({ ...collection, preferredView: "list" });
     } else {
-      mutate({ ...collection, preferredView: "kanban" });
+      updateMutate({ ...collection, preferredView: "kanban" });
     }
   };
+
+  const router = useRouter();
+  const { mutate: deleteMutate } = api.collection.delete.useMutation({
+    onSuccess: async () => {
+      await trpc.collection.invalidate();
+      router.push("/inbox");
+    },
+  });
 
   return (
     <PopupMenu
@@ -88,6 +98,16 @@ const CollectionSettings = ({
               </button>
             </div>
           </div>
+          {!isPermanentCollection(collection.name) && (
+            <button
+              type="button"
+              onClick={() => deleteMutate({ id: collection.id })}
+              className="text-danger mt-4 flex cursor-pointer items-center gap-2"
+            >
+              <FaTrash />
+              Delete
+            </button>
+          )}
         </div>
       }
     />
