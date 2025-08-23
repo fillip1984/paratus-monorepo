@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  eachDayOfInterval,
-  format,
-  isSunday,
-  nextSaturday,
-  previousSunday,
-  startOfDay,
-} from "date-fns";
+import { addDays, eachDayOfInterval, format, startOfDay } from "date-fns";
 
 import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 
@@ -17,12 +10,11 @@ import CollectionView from "../_components/collection/CollectionView";
 
 export default function UpcomingPage() {
   const [today] = useState(new Date());
-  const [lastSunday] = useState(
-    isSunday(today) ? today : previousSunday(today),
-  );
-  const [upcomingSaturday] = useState(nextSaturday(today));
   const [_week] = useState(
-    eachDayOfInterval({ start: lastSunday, end: upcomingSaturday }),
+    eachDayOfInterval({
+      start: today,
+      end: addDays(today, 7),
+    }),
   );
 
   const { data: inboxId } = api.collection.inboxId.useQuery();
@@ -33,9 +25,15 @@ export default function UpcomingPage() {
     name: "Overdue",
     position: 0,
     collectionId: inboxId ?? "InboxId",
-    tasks: tasks ?? [],
+    tasks:
+      tasks?.filter(
+        (t) => t.dueDate && startOfDay(t.dueDate) < startOfDay(today),
+      ) ?? [],
     _count: {
-      tasks: tasks?.length ?? 0,
+      tasks:
+        tasks?.filter(
+          (t) => t.dueDate && startOfDay(t.dueDate) < startOfDay(today),
+        ).length ?? 0,
     },
   };
 
