@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   autoUpdate,
   flip,
@@ -10,7 +11,6 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
-import { useState } from "react";
 
 /* Build ontop of PopperJS, now Floating-ui, See: https://floating-ui.com/docs/popover */
 export default function PopupMenu({
@@ -42,7 +42,15 @@ export default function PopupMenu({
 
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div
+        ref={refs.setReference}
+        {...getReferenceProps({
+          onClick: (e) => {
+            // had to add e.stopPropagation() if popup was within another clickable element
+            e.stopPropagation();
+          },
+        })}
+      >
         {button}
       </div>
 
