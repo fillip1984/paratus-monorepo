@@ -9,6 +9,7 @@ export const isPermanentSection = (
 ): boolean => {
   return (
     collectionName === "Today" ||
+    collectionName === "Upcoming" ||
     sectionName === "Uncategorized" ||
     sectionName === "Overdue"
   );
