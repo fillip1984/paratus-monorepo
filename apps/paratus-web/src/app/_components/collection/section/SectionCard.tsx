@@ -1,43 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FaAngleDown, FaTrash } from "react-icons/fa";
 import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
+
+import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
+
 import { api } from "~/trpc/react";
-import type { SectionDetailType } from "@paratus/api";
-import { isPermanentSection } from "~/utils/section";
+import { isNewSectionAvailable } from "~/utils/collection";
+import { isAddTaskAvailable, isPermanentSection } from "~/utils/section";
 import PopupMenu from "../../ui/popupMenu";
 import AddSectionCard from "./AddSectionCard";
 import AddTaskCard from "./task/AddTaskCard";
 import TaskCard from "./task/TaskCard";
 
 export default function SectionCard({
+  collection,
   section,
 }: {
+  collection: CollectionDetailType;
   section: SectionDetailType;
 }) {
   // determine default due date
   const [defaultDueDate, setDefaultDueDate] = useState<Date | null>(null);
+  const [defaultSectionId, setDefaultSectionId] = useState<string>(
+    section.id ?? "inbox",
+  );
   const path = usePathname();
   useEffect(() => {
     if (path === "/today") {
       setDefaultDueDate(startOfDay(new Date()));
+      setDefaultSectionId("inbox");
     } else if (path === "/upcoming") {
+      console.log({ collectionName: collection.name, sectionId: section.id });
       const dd = new Date(Number(section.id));
       console.log(dd);
       setDefaultDueDate(dd);
+      setDefaultSectionId("inbox");
     }
-  }, [path, section.id]);
-
-  const trpc = api.useUtils();
-  const { mutate: deleteSection } = api.section.delete.useMutation({
-    onSuccess: () => {
-      void trpc.collection.invalidate();
-    },
-  });
+  }, [collection.name, path, section.id]);
 
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSectionCollapsed, setIsSectionCollapsed] = useState(false);
@@ -61,29 +65,7 @@ export default function SectionCard({
         {/* center */}
 
         {/* trailing */}
-        {!isPermanentSection(section.name) && (
-          <PopupMenu
-            button={
-              <button type="button">
-                <FaEllipsisVertical />
-              </button>
-            }
-            content={
-              <div className="bg-foreground rounded-lg p-2">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => deleteSection({ id: section.id })}
-                    className={`text-danger flex items-center gap-2`}
-                  >
-                    <FaTrash /> Delete
-                  </button>
-                  {/* Add more actions here */}
-                </div>
-              </div>
-            }
-          />
-        )}
+        <SectionAdditionalOptions collection={collection} section={section} />
       </div>
       {/* Add tasks or other content here */}
       <AnimatePresence initial={false}>
@@ -102,31 +84,83 @@ export default function SectionCard({
                 />
               ))}
             </div>
-            <div>
-              {isAddTaskOpen ? (
-                <AddTaskCard
-                  currentCollectionId={section.collectionId}
-                  currentSectionId={section.id}
-                  defaultDueDate={defaultDueDate}
-                  dismiss={() => setIsAddTaskOpen((prev) => !prev)}
-                />
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => setIsAddTaskOpen((prev) => !prev)}
-                  className="flex items-center gap-2 rounded p-1 font-thin hover:bg-white/10"
-                >
-                  <FaPlus className="text-primary" /> Add task
-                </button>
-              )}
-            </div>
+            {isAddTaskAvailable(collection.name, section.name) && (
+              <div className="my-2">
+                {isAddTaskOpen ? (
+                  <AddTaskCard
+                    currentCollectionId={section.collectionId}
+                    defaultDueDate={defaultDueDate}
+                    defaultSectionId={defaultSectionId}
+                    dismiss={() => setIsAddTaskOpen((prev) => !prev)}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsAddTaskOpen((prev) => !prev)}
+                    className="flex items-center gap-2 rounded p-1 font-thin hover:bg-white/10"
+                  >
+                    <FaPlus className="text-primary" /> Add task
+                  </button>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
-      <AddSectionCard
-        collectionId={section.collectionId}
-        addAfter={section.position}
-      />
+
+      {isNewSectionAvailable(collection) && (
+        <AddSectionCard
+          collectionId={section.collectionId}
+          addAfter={section.position}
+        />
+      )}
     </div>
   );
 }
+
+const SectionAdditionalOptions = ({
+  collection,
+  section,
+}: {
+  collection: CollectionDetailType;
+  section: SectionDetailType;
+}) => {
+  const trpc = api.useUtils();
+  const { mutate: deleteSection } = api.section.delete.useMutation({
+    onSuccess: () => {
+      void trpc.collection.invalidate();
+    },
+  });
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      {!isPermanentSection(collection.name, section.name) && (
+        <PopupMenu
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          button={
+            <button type="button">
+              <FaEllipsisVertical />
+            </button>
+          }
+          content={
+            <div className="bg-foreground rounded-lg p-2">
+              <div className="flex flex-col items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => deleteSection({ id: section.id })}
+                  className={`text-danger flex items-center gap-2`}
+                >
+                  <FaTrash /> Delete
+                </button>
+                {/* Add more actions here */}
+              </div>
+            </div>
+          }
+        />
+      )}
+    </>
+  );
+};

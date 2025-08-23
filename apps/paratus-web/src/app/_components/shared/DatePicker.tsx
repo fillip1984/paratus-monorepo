@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   endOfWeek,
   format,
@@ -9,14 +10,14 @@ import {
   startOfDay,
   startOfTomorrow,
 } from "date-fns";
-import { useEffect, useState } from "react";
 import { CgCalendarNext } from "react-icons/cg";
 import { FaCalendarAlt, FaCalendarDay, FaSun } from "react-icons/fa";
 import { MdOutlineWeekend } from "react-icons/md";
+
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { capitalizeFirstLetter } from "~/utils/string";
 
-type DateType = {
+type DatePickerType = {
   label: string;
   value: Date | null;
   icon: React.ReactNode;
@@ -56,7 +57,8 @@ export default function DatePicker({
   value: Date | null;
   setValue: (value: Date | null) => void;
 }) {
-  const [datePickerValue, setDatePickerValue] = useState<DateType | null>();
+  const [datePickerValue, setDatePickerValue] =
+    useState<DatePickerType | null>();
   useEffect(() => {
     // console.log('useEffect for value change. dpv: ', datePickerValue, value)
     if (value && datePickerValue?.value !== value) {
@@ -71,17 +73,23 @@ export default function DatePicker({
         icon: <FaCalendarAlt />,
       };
       setDatePickerValue(foundDueDate);
+    } else {
+      setDatePickerValue(null);
     }
   }, [value, datePickerValue?.value]);
 
-  const handleUpdate = (date: DateType) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleUpdate = (date: DatePickerType | null) => {
     setDatePickerValue(date);
-    setValue(date.value);
+    setValue(date ? date.value : null);
+    setIsOpen(false);
   };
 
   return (
     <div className="flex gap-2">
       <PopupMenu
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         button={
           <button
             type="button"
@@ -97,9 +105,9 @@ export default function DatePicker({
                   )[0] ?? "",
                 )}
                 <span
-                  onClick={() => {
-                    setDatePickerValue(null);
-                    setValue(null);
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdate(null);
                   }}
                   className="text-danger ml-2 text-sm"
                 >
@@ -128,7 +136,10 @@ export default function DatePicker({
                   <button
                     key={d.value.toString()}
                     type="button"
-                    onClick={() => handleUpdate(d)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUpdate(d);
+                    }}
                     className="hover:bg-secondary/30 flex items-center gap-2 rounded p-1 text-xs"
                   >
                     {d.icon} {d.label}

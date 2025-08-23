@@ -180,7 +180,7 @@ export const taskRouter = createTRPCRouter({
           complete: input.complete,
           position: input.position,
           dueDate: input.dueDate,
-          // priority: input.priority,
+          priority: input.priority,
           sectionId: input.sectionId,
         },
       });

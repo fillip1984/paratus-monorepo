@@ -2,8 +2,9 @@
 
 import { format, isSameDay, startOfDay } from "date-fns";
 
+import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
+
 import { api } from "~/trpc/react";
-import type { SectionDetailType, CollectionDetailType } from "@paratus/api";
 import CollectionView from "../_components/collection/CollectionView";
 
 export default function TodayPage() {
@@ -39,6 +40,7 @@ export default function TodayPage() {
   const today = {
     name: "Today",
     id: "Today",
+    preferredView: "list",
     sections: [overdueSection, todaySection],
   } as CollectionDetailType;
 

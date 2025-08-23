@@ -10,17 +10,19 @@ import {
   useInteractions,
   useRole,
 } from "@floating-ui/react";
-import { useState } from "react";
 
 /* Build ontop of PopperJS, now Floating-ui, See: https://floating-ui.com/docs/popover */
 export default function PopupMenu({
+  isOpen,
+  setIsOpen,
   button,
   content,
 }: {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
   button: React.ReactNode;
   content: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
@@ -42,7 +44,15 @@ export default function PopupMenu({
 
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div
+        ref={refs.setReference}
+        {...getReferenceProps({
+          onClick: (e) => {
+            // had to add e.stopPropagation() if popup was within another clickable element
+            e.stopPropagation();
+          },
+        })}
+      >
         {button}
       </div>
 
@@ -50,6 +60,7 @@ export default function PopupMenu({
         <FloatingFocusManager context={context} modal={true}>
           <div
             ref={refs.setFloating}
+            className="z-[1000]"
             style={floatingStyles}
             {...getFloatingProps()}
           >

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FaCalendarDay,
   FaCalendarWeek,
@@ -9,14 +11,14 @@ import {
   FaX,
 } from "react-icons/fa6";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import type { CollectionSummaryType } from "@paratus/api";
+
 import { api } from "~/trpc/react";
 import Modal from "../ui/modal";
-import type { CollectionSummaryType } from "@paratus/api";
 
 export default function SideNav() {
   const path = usePathname();
+
   const { data: collections } = api.collection.readAll.useQuery();
   const { data: today } = api.task.today.useQuery();
 
@@ -97,7 +99,7 @@ export default function SideNav() {
                 href={`/${collection.id}`}
                 key={collection.id}
                 data-label={collection.id}
-                className={`[&.active]:text-primary [&.active]:bg-background hover:bg-background/60 mx-2 flex items-center justify-between rounded-xl p-2 transition duration-200 select-none`}
+                className={`mx-2 flex items-center justify-between rounded-xl p-2 transition duration-200 select-none ${path.endsWith(collection.id) ? "bg-background text-primary font-semibold" : "hover:bg-background/60"}`}
               >
                 <span># {collection.name}</span>
                 <span className="text-xs text-gray-300">

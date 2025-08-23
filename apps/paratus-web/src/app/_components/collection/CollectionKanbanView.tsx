@@ -1,4 +1,5 @@
 import type { CollectionDetailType } from "@paratus/api";
+
 import SectionCard from "./section/SectionCard";
 
 export default function CollectionKanbanView({
@@ -10,7 +11,11 @@ export default function CollectionKanbanView({
     <div className="flex flex-1 overflow-hidden">
       <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto p-2">
         {collection.sections.map((section) => (
-          <SectionCard key={section.id} section={section} />
+          <SectionCard
+            key={section.id}
+            collection={collection}
+            section={section}
+          />
         ))}
       </div>
     </div>

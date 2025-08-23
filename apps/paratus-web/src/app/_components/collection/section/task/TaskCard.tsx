@@ -1,16 +1,18 @@
 "use client";
 
+import type { PriorityOption } from "@prisma/client";
 import { useState } from "react";
 import { CgListTree } from "react-icons/cg";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { TbProgressCheck } from "react-icons/tb";
 
+import type { TaskDetailType } from "@paratus/api";
+
+import DatePicker from "~/app/_components/shared/DatePicker";
+import PriorityPicker from "~/app/_components/shared/PriorityPicker";
+import SectionPicker from "~/app/_components/shared/SectionPicker";
 import Modal from "~/app/_components/ui/modal";
 import { api } from "~/trpc/react";
-import type { TaskDetailType } from "@paratus/api";
-import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
-import SectionPicker from "./SectionPicker";
 import TaskModal from "./TaskModal";
 
 export default function TaskCard({
@@ -24,20 +26,11 @@ export default function TaskCard({
   const trpc = api.useUtils();
   const { mutate: updateTask } = api.task.update.useMutation({
     onSuccess: async () => {
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.task.today.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readAll.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.inbox.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readOne.queryKey({
-      //     id: collectionId,
-      //   }),
-      // });
+      void trpc.collection.invalidate();
+      void trpc.task.invalidate();
+      void trpc.collection.readOne.invalidate({
+        id: collectionId,
+      });
     },
   });
 
@@ -55,6 +48,10 @@ export default function TaskCard({
     updateTask({ ...task, dueDate });
   };
 
+  const handlePriorityChange = (priority: PriorityOption | null) => {
+    updateTask({ ...task, priority });
+  };
+
   const handleSectionChange = (sectionId: string) => {
     updateTask({ ...task, sectionId });
   };
@@ -67,7 +64,7 @@ export default function TaskCard({
             <input
               type="checkbox"
               checked={task.complete}
-              onClick={handleToggleComplete}
+              onChange={handleToggleComplete}
               className="rounded-full bg-inherit"
             />
             <div onClick={handleTaskModal} className="flex flex-1 flex-col">
@@ -92,9 +89,7 @@ export default function TaskCard({
                 />
                 <PriorityPicker
                   value={task.priority}
-                  setValue={(priority) => {
-                    updateTask({ ...task, priority });
-                  }}
+                  setValue={handlePriorityChange}
                 />
                 {task.parentId === null && (
                   <div className="ml-auto">

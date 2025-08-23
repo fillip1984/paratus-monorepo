@@ -1,20 +1,21 @@
 "use client";
 
-import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import type { PriorityOption } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 import { FaEllipsis, FaPlus, FaX } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
+
+import type { TaskDetailType } from "@paratus/api";
+
+import DatePicker from "~/app/_components/shared/DatePicker";
+import PriorityPicker from "~/app/_components/shared/PriorityPicker";
+import SectionPicker from "~/app/_components/shared/SectionPicker";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
-
 import AddTaskCard from "./AddTaskCard";
-import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
-import SectionPicker from "./SectionPicker";
 import TaskListRow from "./TaskCard";
-import type { TaskDetailType } from "@paratus/api";
 
 export default function TaskModal({
   collectionId,
@@ -61,49 +62,21 @@ export default function TaskModal({
   const { mutate: deleteTask } = api.task.delete.useMutation({
     onSuccess: async () => {
       console.log("task deleted");
+      void trpc.collection.invalidate();
+      void trpc.task.invalidate();
+      void trpc.collection.readOne.invalidate({
+        id: collectionId,
+      });
       dismiss();
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.task.today.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readAll.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.inbox.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readOne.queryKey({
-      //     id: collectionId,
-      //   }),
-      // });
     },
   });
   const { mutate: updateTask } = api.task.update.useMutation({
     onSuccess: async () => {
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.task.today.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readAll.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.inbox.queryKey(),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: trpc.collection.readOne.queryKey({
-      //     id: collectionId,
-      //   }),
-      // });
-      // await queryClient.invalidateQueries({
-      //   queryKey: [
-      //     trpc.task.today.queryKey(),
-      //     trpc.collection.readAll.queryKey(),
-      //     trpc.collection.readAll.queryKey(),
-      //     trpc.collection.readOne.queryKey({
-      //       id: collectionId,
-      //     }),
-      //   ],
-      // })
+      void trpc.collection.invalidate();
+      void trpc.task.invalidate();
+      void trpc.collection.readOne.invalidate({
+        id: collectionId,
+      });
     },
   });
 
@@ -170,6 +143,8 @@ export default function TaskModal({
     // }
   }, [task.children, setValues]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="flex h-[400px] max-w-[800px] flex-col">
       {/* header */}
@@ -191,13 +166,15 @@ export default function TaskModal({
             <FaChevronDown />
           </span>
           <PopupMenu
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             button={
               <span>
                 <FaEllipsis />
               </span>
             }
             content={
-              <div className="flex w-[100px] flex-col gap-1 p-1">
+              <div className="bg-background flex w-[100px] flex-col gap-1 p-1">
                 <span
                   className="flex cursor-pointer items-center gap-2 rounded p-1 text-white hover:bg-white/10"
                   onClick={() => deleteTask({ id: task.id })}
@@ -312,9 +289,9 @@ export default function TaskModal({
               {isAddingSubTask ? (
                 <AddTaskCard
                   currentCollectionId={collectionId}
-                  currentSectionId={task.sectionId}
                   parentTaskId={task.id}
                   defaultDueDate={null}
+                  defaultSectionId={task.sectionId}
                   dismiss={() => setIsAddingSubTask((prev) => !prev)}
                 />
               ) : (

@@ -3,34 +3,38 @@ import type { FormEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
+import DatePicker from "~/app/_components/shared/DatePicker";
+import PriorityPicker from "~/app/_components/shared/PriorityPicker";
+import SectionPicker from "~/app/_components/shared/SectionPicker";
 import { api } from "~/trpc/react";
-import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
-import SectionPicker from "./SectionPicker";
 
 export default function AddTaskCard({
   currentCollectionId,
-  currentSectionId,
+  // currentSectionId,
   parentTaskId,
   defaultDueDate,
+  defaultSectionId,
   dismiss,
 }: {
   currentCollectionId: string;
-  currentSectionId: string;
+  // currentSectionId: string;
   parentTaskId?: string | null;
-  defaultDueDate?: Date | null;
+  defaultDueDate: Date | null;
+  defaultSectionId: string;
   dismiss: () => void;
 }) {
   // steal focus
   useEffect(() => {
     formRef.current?.querySelector("input")?.focus();
   }, []);
+
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<Date | null>(defaultDueDate ?? null);
   const [priority, setPriority] = useState<PriorityOption | null>(null);
-  const [sectionId, setSectionId] = useState<string | null>(currentSectionId);
+  const [sectionId, setSectionId] = useState<string | null>(defaultSectionId);
   const [isFormValid, setIsFormValid] = useState(false);
+
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (text.trim()) {
@@ -40,16 +44,25 @@ export default function AddTaskCard({
     }
   }, [text]);
 
+  const resetForm = () => {
+    setText("");
+    setDescription("");
+    setDueDate(defaultDueDate ?? null);
+    setPriority(null);
+    // setSectionId(currentSectionId);
+    setIsFormValid(false);
+    formRef.current?.querySelector("input")?.focus();
+  };
+
   const trpc = api.useUtils();
   const { mutate: createTask } = api.task.create.useMutation({
     onSuccess: async () => {
-      console.log("task created");
-      // dismiss()
-      setText("");
-      setDescription("");
+      void trpc.collection.invalidate();
+      void trpc.task.invalidate();
       void trpc.collection.readOne.invalidate({
         id: currentCollectionId,
       });
+      resetForm();
     },
   });
 

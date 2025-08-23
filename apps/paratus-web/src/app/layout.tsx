@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import SideNav from "./_components/shared/SideNav";
@@ -30,6 +31,7 @@ export default function RootLayout({
           <main className="flex h-screen overflow-hidden">
             <SideNav />
             <div className="flex flex-1 overflow-hidden">{children}</div>
+            <ReactQueryDevtools initialIsOpen={false} />
           </main>
         </TRPCReactProvider>
       </body>

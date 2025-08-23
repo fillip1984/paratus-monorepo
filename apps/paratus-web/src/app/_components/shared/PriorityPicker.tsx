@@ -1,9 +1,10 @@
-import { PriorityOption } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { PriorityOption } from "@prisma/client";
 import { FaFlag, FaRegFlag } from "react-icons/fa";
+
 import PopupMenu from "~/app/_components/ui/popupMenu";
 
-type PriorityType = {
+type PriorityPickerType = {
   label: string;
   shortLabel: string | null;
   value: PriorityOption | null;
@@ -44,24 +45,29 @@ export default function PriorityPicker({
   setValue: (value: PriorityOption | null) => void;
 }) {
   const [priorityPickerValue, setPriorityPickerValue] =
-    useState<PriorityType | null>(
+    useState<PriorityPickerType | null>(
       value ? (priorities.find((p) => p.value === value) ?? null) : null,
     );
 
   useEffect(() => {
-    if (value && priorityPickerValue?.value !== value) {
-      const foundPriority = priorities.find((p) => p.value === value);
-      setPriorityPickerValue(foundPriority ?? null);
-    }
+    // if (value && priorityPickerValue?.value !== value) {
+    const foundPriority = priorities.find((p) => p.value === value);
+    setPriorityPickerValue(foundPriority ?? null);
+    // }
   }, [value, priorityPickerValue?.value]);
 
-  const handleUpdate = (newValue: PriorityType) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleUpdate = (newValue: PriorityPickerType | null) => {
+    console.log({ newValue });
     setPriorityPickerValue(newValue);
-    setValue(newValue.value);
+    setValue(newValue ? newValue.value : null);
+    setIsOpen(false);
   };
 
   return (
     <PopupMenu
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       button={
         <button
           type="button"
@@ -71,9 +77,9 @@ export default function PriorityPicker({
             <span className="flex items-center gap-2 text-xs">
               {priorityPickerValue.icon} {priorityPickerValue.shortLabel}
               <span
-                onClick={() => {
-                  setPriorityPickerValue(null);
-                  setValue(null);
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdate(null);
                 }}
                 className="text-danger ml-1 text-sm"
               >
@@ -93,7 +99,10 @@ export default function PriorityPicker({
             <button
               key={p.value}
               type="button"
-              onClick={() => handleUpdate(p)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUpdate(p);
+              }}
               className="hover:bg-secondary/30 flex items-center gap-2 rounded p-2 text-xs"
             >
               {p.icon} {p.label}

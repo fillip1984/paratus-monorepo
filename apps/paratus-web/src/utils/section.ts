@@ -3,10 +3,21 @@
  * @param section Permanent sections are those that should not be deleted, renamed, resorted, etc...
  * @returns
  */
-export const isPermanentSection = (sectionName: string): boolean => {
+export const isPermanentSection = (
+  collectionName: string,
+  sectionName: string,
+): boolean => {
   return (
+    collectionName === "Today" ||
+    collectionName === "Upcoming" ||
     sectionName === "Uncategorized" ||
-    sectionName === "Inbox" ||
     sectionName === "Overdue"
   );
+};
+
+export const isAddTaskAvailable = (
+  collectionName: string,
+  sectionName: string,
+): boolean => {
+  return sectionName !== "Overdue";
 };
