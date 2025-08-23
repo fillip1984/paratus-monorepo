@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaAngleDown, FaInbox } from "react-icons/fa";
 import { RxSection } from "react-icons/rx";
+
+import type { CollectionSummaryType, SectionSummaryType } from "@paratus/api";
+
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
-import type { CollectionSummaryType, SectionSummaryType } from "@paratus/api";
 
 type SectionPickerType = {
   label: React.ReactNode;
@@ -119,15 +121,45 @@ export default function SectionPicker({
       content={
         <div className="bg-foreground flex flex-col gap-1 rounded-lg p-2">
           <input type="search" className="rounded border" />
-          {inbox && (
-            <button
-              type="button"
-              onClick={() => setSectionPickerValue(inbox)}
-              className="hover:bg-secondary/30 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
-            >
-              {inbox.label}
-            </button>
-          )}
+          {inbox &&
+            collections
+              ?.filter((c) => c.name === "Inbox")
+              .map((collection) => (
+                <div key={collection.id} className="flex flex-col gap-1 p-1">
+                  {collection.sections.map((section, i) => (
+                    <div key={`${collection.id}-${i}`} className="w-full">
+                      {section.name === "Uncategorized" ? (
+                        <button
+                          type="button"
+                          onClick={() => setSectionPickerValue(inbox)}
+                          className="hover:bg-secondary/30 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
+                        >
+                          {inbox.label}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setSectionPickerValue({
+                              value: section.id,
+                              label: (
+                                <span className="flex items-center gap-2">
+                                  # {collection.name} / <RxSection />
+                                  {section.name}
+                                </span>
+                              ),
+                            })
+                          }
+                          className="hover:bg-secondary/30 ml-2 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
+                        >
+                          <RxSection />
+                          {section.name}
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
           <span>Collections</span>
           {collections
             ?.filter((c) => c.name !== "Inbox")

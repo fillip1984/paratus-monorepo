@@ -1,20 +1,21 @@
 "use client";
 
-import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import type { PriorityOption } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 import { FaEllipsis, FaPlus, FaX } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
+
+import type { TaskDetailType } from "@paratus/api";
+
+import DatePicker from "~/app/_components/shared/DatePicker";
+import PriorityPicker from "~/app/_components/shared/PriorityPicker";
+import SectionPicker from "~/app/_components/shared/SectionPicker";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
-
 import AddTaskCard from "./AddTaskCard";
-import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
-import SectionPicker from "./SectionPicker";
 import TaskListRow from "./TaskCard";
-import type { TaskDetailType } from "@paratus/api";
 
 export default function TaskModal({
   collectionId,

@@ -7,11 +7,11 @@ import { TbProgressCheck } from "react-icons/tb";
 
 import type { TaskDetailType } from "@paratus/api";
 
+import DatePicker from "~/app/_components/shared/DatePicker";
+import PriorityPicker from "~/app/_components/shared/PriorityPicker";
+import SectionPicker from "~/app/_components/shared/SectionPicker";
 import Modal from "~/app/_components/ui/modal";
 import { api } from "~/trpc/react";
-import DatePicker from "./DatePicker";
-import PriorityPicker from "./PriorityPicker";
-import SectionPicker from "./SectionPicker";
 import TaskModal from "./TaskModal";
 
 export default function TaskCard({
@@ -68,7 +68,7 @@ export default function TaskCard({
             <input
               type="checkbox"
               checked={task.complete}
-              onClick={handleToggleComplete}
+              onChange={handleToggleComplete}
               className="rounded-full bg-inherit"
             />
             <div onClick={handleTaskModal} className="flex flex-1 flex-col">
