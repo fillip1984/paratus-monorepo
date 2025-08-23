@@ -42,4 +42,4 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           pnpm run build:web
-          pnpx sst deploy --stage prod
+          # pnpx sst deploy --stage prod
