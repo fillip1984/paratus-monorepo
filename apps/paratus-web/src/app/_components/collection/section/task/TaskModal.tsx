@@ -143,6 +143,8 @@ export default function TaskModal({
     // }
   }, [task.children, setValues]);
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="flex h-[400px] max-w-[800px] flex-col">
       {/* header */}
@@ -164,6 +166,8 @@ export default function TaskModal({
             <FaChevronDown />
           </span>
           <PopupMenu
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
             button={
               <span>
                 <FaEllipsis />

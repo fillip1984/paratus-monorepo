@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaTrash } from "react-icons/fa6";
 import { GiSettingsKnobs } from "react-icons/gi";
@@ -50,6 +51,7 @@ const CollectionSettings = ({
   const { mutate: updateMutate } = api.collection.update.useMutation({
     onSuccess: () => {
       void trpc.collection.invalidate();
+      setIsOpen(false);
     },
   });
   const handleViewToggle = () => {
@@ -68,8 +70,12 @@ const CollectionSettings = ({
     },
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <PopupMenu
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       button={<GiSettingsKnobs className="cursor-pointer text-2xl" />}
       content={
         <div className="bg-foreground rounded-lg p-2">

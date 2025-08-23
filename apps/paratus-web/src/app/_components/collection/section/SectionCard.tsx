@@ -132,10 +132,14 @@ const SectionAdditionalOptions = ({
     },
   });
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
       {!isPermanentSection(collection.name, section.name) && (
         <PopupMenu
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
           button={
             <button type="button">
               <FaEllipsisVertical />
