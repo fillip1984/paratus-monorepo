@@ -18,7 +18,8 @@
     "dev:mobile": "pnpm --filter paratus-mobile run dev",
     "dev:web": "pnpm --filter paratus-web run dev",
     "prod:db:push": "pnpm dotenv -e .env.prod -- prisma db push",
-    "prod:deploy": "pnpm dotenv -e .env.prod -- sst deploy --stage prod"
+    "prod:deploy": "pnpm dotenv -e .env.prod -- sst deploy --stage prod",
+    "start:web": "pnpm --filter paratus-web run start"
   },
   "dependencies": {
     "sst": "3.17.10"
