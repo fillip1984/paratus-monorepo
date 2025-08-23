@@ -7,6 +7,9 @@
     "build": "pnpm with-env next build",
     "dev": "pnpm with-env next dev",
     "start": "pnpm with-env next start",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
@@ -16,7 +19,7 @@
     "@prisma/client": "catalog:",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "catalog:",
-    "@tanstack/react-query-devtools": "^5.85.5",
+    "@tanstack/react-query-devtools": "5.85.3",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
@@ -33,7 +36,11 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@paratus/eslint-config": "workspace:*",
+    "@paratus/prettier-config": "workspace:*",
+    "@paratus/tsconfig": "workspace:*",
     "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
