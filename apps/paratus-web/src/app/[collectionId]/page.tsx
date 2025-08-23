@@ -1,10 +1,11 @@
 "use client";
 
+import { use } from "react";
+import { notFound } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+
 import { api } from "~/trpc/react";
 import CollectionView from "../_components/collection/CollectionView";
-import { notFound } from "next/navigation";
-import { use } from "react";
 import LoadOrRetry from "../_components/shared/LoadOrRetry";
 
 export default function CollectionPage({

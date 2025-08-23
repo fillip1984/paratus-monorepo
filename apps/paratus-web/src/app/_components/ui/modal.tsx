@@ -1,31 +1,31 @@
-import { scrollbarWidth } from '@xobotyi/scrollbar-width'
-import { AnimatePresence, motion } from 'motion/react'
-import { useEffect } from 'react'
+import { useEffect } from "react";
+import { scrollbarWidth } from "@xobotyi/scrollbar-width";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function Modal({
   isOpen,
   close,
   children,
 }: {
-  isOpen: boolean
-  close: () => void
-  onConfirm?: () => void
-  children: React.ReactNode
+  isOpen: boolean;
+  close: () => void;
+  onConfirm?: () => void;
+  children: React.ReactNode;
 }) {
-  const width = scrollbarWidth()
+  const width = scrollbarWidth();
   // prevent body from being scrollable while modal is present
   // See: https://stackoverflow.com/questions/54989513/react-prevent-scroll-when-modal-is-open
   useEffect(() => {
     if (isOpen) {
       // console.log(`scrollbar width: ${width}`)
-      document.body.classList.add('overflow-hidden', `pr-[${width}px]`)
+      document.body.classList.add("overflow-hidden", `pr-[${width}px]`);
     } else {
-      document.body.classList.remove('overflow-hidden', `pr-[${width}px]`)
+      document.body.classList.remove("overflow-hidden", `pr-[${width}px]`);
     }
-  }, [isOpen, width])
+  }, [isOpen, width]);
 
   if (!isOpen) {
-    return null
+    return null;
   }
 
   return (
@@ -40,10 +40,11 @@ export default function Modal({
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
-          className="bg-foreground z-[1000] rounded-xl">
+          className="bg-foreground z-[1000] rounded-xl"
+        >
           {children}
         </motion.div>
       </div>
     </AnimatePresence>
-  )
+  );
 }
