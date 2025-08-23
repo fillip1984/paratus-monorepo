@@ -145,7 +145,7 @@ const AddCollectionModal = ({
   const router = useRouter();
   const trpc = api.useUtils();
   const { mutate: createCollection } = api.collection.create.useMutation({
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       void trpc.collection.invalidate();
       close();
       setName("");

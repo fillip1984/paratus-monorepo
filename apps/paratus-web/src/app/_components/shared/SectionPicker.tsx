@@ -5,14 +5,14 @@ import { RxSection } from "react-icons/rx";
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { api } from "~/trpc/react";
 
-type SectionPickerType = {
+interface SectionPickerType {
   id: string;
   selectedLabel: React.ReactNode;
   dropDownLabel: React.ReactNode;
   searchableLabel: string;
   value: string;
   indented: boolean;
-};
+}
 
 export default function SectionPicker({
   value,

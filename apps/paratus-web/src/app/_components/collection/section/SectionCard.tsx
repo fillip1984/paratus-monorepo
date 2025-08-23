@@ -26,9 +26,7 @@ export default function SectionCard({
 }) {
   // determine default due date
   const [defaultDueDate, setDefaultDueDate] = useState<Date | null>(null);
-  const [defaultSectionId, setDefaultSectionId] = useState<string>(
-    section.id ?? "inbox",
-  );
+  const [defaultSectionId, setDefaultSectionId] = useState<string>(section.id);
   const path = usePathname();
   useEffect(() => {
     if (path === "/today") {

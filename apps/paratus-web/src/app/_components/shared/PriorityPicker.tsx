@@ -4,12 +4,12 @@ import { FaFlag, FaRegFlag } from "react-icons/fa";
 
 import PopupMenu from "~/app/_components/ui/popupMenu";
 
-type PriorityPickerType = {
+interface PriorityPickerType {
   label: string;
   shortLabel: string | null;
   value: PriorityOption | null;
   icon: React.ReactNode;
-};
+}
 const priorities = [
   {
     label: "Urgent & important",
