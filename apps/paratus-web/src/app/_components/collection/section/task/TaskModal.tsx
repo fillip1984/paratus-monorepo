@@ -170,7 +170,7 @@ export default function TaskModal({
               </span>
             }
             content={
-              <div className="flex w-[100px] flex-col gap-1 p-1">
+              <div className="bg-background flex w-[100px] flex-col gap-1 p-1">
                 <span
                   className="flex cursor-pointer items-center gap-2 rounded p-1 text-white hover:bg-white/10"
                   onClick={() => deleteTask({ id: task.id })}

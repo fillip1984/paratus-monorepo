@@ -134,7 +134,10 @@ export default function SectionPicker({
                       {section.name === "Uncategorized" ? (
                         <button
                           type="button"
-                          onClick={() => setSectionPickerValue(inbox)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSectionPickerValue(inbox);
+                          }}
                           className="hover:bg-secondary/30 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
                         >
                           {inbox.label}
@@ -142,7 +145,8 @@ export default function SectionPicker({
                       ) : (
                         <button
                           type="button"
-                          onClick={() =>
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setSectionPickerValue({
                               value: section.id,
                               label: (
@@ -151,8 +155,8 @@ export default function SectionPicker({
                                   {section.name}
                                 </span>
                               ),
-                            })
-                          }
+                            });
+                          }}
                           className="hover:bg-secondary/30 ml-2 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
                         >
                           <RxSection />
@@ -173,12 +177,13 @@ export default function SectionPicker({
                     {section.name === "Uncategorized" ? (
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSectionPickerValue({
                             value: section.id,
                             label: `# ${collection.name}`,
-                          })
-                        }
+                          });
+                        }}
                         className="hover:bg-secondary/30 flex w-full rounded px-2 py-1 text-xs"
                       >
                         # {collection.name}
@@ -186,7 +191,8 @@ export default function SectionPicker({
                     ) : (
                       <button
                         type="button"
-                        onClick={() =>
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSectionPickerValue({
                             value: section.id,
                             label: (
@@ -195,8 +201,8 @@ export default function SectionPicker({
                                 {section.name}
                               </span>
                             ),
-                          })
-                        }
+                          });
+                        }}
                         className="hover:bg-secondary/30 ml-2 flex w-full items-center gap-2 rounded px-2 py-1 text-xs"
                       >
                         <RxSection />

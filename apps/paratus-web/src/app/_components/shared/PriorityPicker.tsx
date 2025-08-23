@@ -1,6 +1,7 @@
-import { PriorityOption } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { PriorityOption } from "@prisma/client";
 import { FaFlag, FaRegFlag } from "react-icons/fa";
+
 import PopupMenu from "~/app/_components/ui/popupMenu";
 
 type PriorityType = {
@@ -93,7 +94,10 @@ export default function PriorityPicker({
             <button
               key={p.value}
               type="button"
-              onClick={() => handleUpdate(p)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUpdate(p);
+              }}
               className="hover:bg-secondary/30 flex items-center gap-2 rounded p-2 text-xs"
             >
               {p.icon} {p.label}

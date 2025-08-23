@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   endOfWeek,
   format,
@@ -9,10 +10,10 @@ import {
   startOfDay,
   startOfTomorrow,
 } from "date-fns";
-import { useEffect, useState } from "react";
 import { CgCalendarNext } from "react-icons/cg";
 import { FaCalendarAlt, FaCalendarDay, FaSun } from "react-icons/fa";
 import { MdOutlineWeekend } from "react-icons/md";
+
 import PopupMenu from "~/app/_components/ui/popupMenu";
 import { capitalizeFirstLetter } from "~/utils/string";
 
@@ -128,7 +129,10 @@ export default function DatePicker({
                   <button
                     key={d.value.toString()}
                     type="button"
-                    onClick={() => handleUpdate(d)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUpdate(d);
+                    }}
                     className="hover:bg-secondary/30 flex items-center gap-2 rounded p-1 text-xs"
                   >
                     {d.icon} {d.label}
