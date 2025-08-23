@@ -98,16 +98,18 @@ const CollectionSettings = ({
               </button>
             </div>
           </div>
-          {!isPermanentCollection(collection.name) && (
-            <button
-              type="button"
-              onClick={() => deleteMutate({ id: collection.id })}
-              className="text-danger mt-4 flex cursor-pointer items-center gap-2"
-            >
-              <FaTrash />
-              Delete
-            </button>
-          )}
+          <div className="flex flex-col">
+            {!isPermanentCollection(collection.name) && (
+              <button
+                type="button"
+                onClick={() => deleteMutate({ id: collection.id })}
+                className="text-danger hover:bg-background/60 mt-4 flex cursor-pointer items-center gap-2 rounded p-2"
+              >
+                <FaTrash />
+                Delete
+              </button>
+            )}
+          </div>
         </div>
       }
     />

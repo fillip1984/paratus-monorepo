@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   autoUpdate,
   flip,
@@ -14,13 +13,16 @@ import {
 
 /* Build ontop of PopperJS, now Floating-ui, See: https://floating-ui.com/docs/popover */
 export default function PopupMenu({
+  isOpen,
+  setIsOpen,
   button,
   content,
 }: {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
   button: React.ReactNode;
   content: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
@@ -58,6 +60,7 @@ export default function PopupMenu({
         <FloatingFocusManager context={context} modal={true}>
           <div
             ref={refs.setFloating}
+            className="z-[1000]"
             style={floatingStyles}
             {...getFloatingProps()}
           >

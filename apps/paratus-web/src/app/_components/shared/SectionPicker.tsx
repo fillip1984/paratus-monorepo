@@ -105,14 +105,20 @@ export default function SectionPicker({
       value: section.id,
     });
   }, [value, collections, inbox]);
+
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     if (sectionPickerValue && sectionPickerValue.value !== value) {
       // console.log("only update section if there's a change in the value")
       setValue(sectionPickerValue.value);
+      setIsOpen(false);
     }
   }, [sectionPickerValue, sectionPickerValue?.value, setValue, value]);
+
   return (
     <PopupMenu
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       button={
         <button
           type="button"

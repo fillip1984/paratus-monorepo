@@ -72,17 +72,23 @@ export default function DatePicker({
         icon: <FaCalendarAlt />,
       };
       setDatePickerValue(foundDueDate);
+    } else {
+      setDatePickerValue(null);
     }
   }, [value, datePickerValue?.value]);
 
-  const handleUpdate = (date: DateType) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleUpdate = (date: DateType | null) => {
     setDatePickerValue(date);
-    setValue(date.value);
+    setValue(date ? date.value : null);
+    setIsOpen(false);
   };
 
   return (
     <div className="flex gap-2">
       <PopupMenu
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         button={
           <button
             type="button"
@@ -98,9 +104,9 @@ export default function DatePicker({
                   )[0] ?? "",
                 )}
                 <span
-                  onClick={() => {
-                    setDatePickerValue(null);
-                    setValue(null);
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleUpdate(null);
                   }}
                   className="text-danger ml-2 text-sm"
                 >

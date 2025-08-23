@@ -1,5 +1,6 @@
 "use client";
 
+import type { PriorityOption } from "@prisma/client";
 import { useState } from "react";
 import { CgListTree } from "react-icons/cg";
 import { RxDragHandleDots2 } from "react-icons/rx";
@@ -47,6 +48,10 @@ export default function TaskCard({
     updateTask({ ...task, dueDate });
   };
 
+  const handlePriorityChange = (priority: PriorityOption | null) => {
+    updateTask({ ...task, priority });
+  };
+
   const handleSectionChange = (sectionId: string) => {
     updateTask({ ...task, sectionId });
   };
@@ -84,9 +89,7 @@ export default function TaskCard({
                 />
                 <PriorityPicker
                   value={task.priority}
-                  setValue={(priority) => {
-                    updateTask({ ...task, priority });
-                  }}
+                  setValue={handlePriorityChange}
                 />
                 {task.parentId === null && (
                   <div className="ml-auto">

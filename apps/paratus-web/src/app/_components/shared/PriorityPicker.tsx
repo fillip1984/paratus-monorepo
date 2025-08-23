@@ -50,19 +50,24 @@ export default function PriorityPicker({
     );
 
   useEffect(() => {
-    if (value && priorityPickerValue?.value !== value) {
-      const foundPriority = priorities.find((p) => p.value === value);
-      setPriorityPickerValue(foundPriority ?? null);
-    }
+    // if (value && priorityPickerValue?.value !== value) {
+    const foundPriority = priorities.find((p) => p.value === value);
+    setPriorityPickerValue(foundPriority ?? null);
+    // }
   }, [value, priorityPickerValue?.value]);
 
-  const handleUpdate = (newValue: PriorityType) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleUpdate = (newValue: PriorityType | null) => {
+    console.log({ newValue });
     setPriorityPickerValue(newValue);
-    setValue(newValue.value);
+    setValue(newValue ? newValue.value : null);
+    setIsOpen(false);
   };
 
   return (
     <PopupMenu
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
       button={
         <button
           type="button"
@@ -72,9 +77,9 @@ export default function PriorityPicker({
             <span className="flex items-center gap-2 text-xs">
               {priorityPickerValue.icon} {priorityPickerValue.shortLabel}
               <span
-                onClick={() => {
-                  setPriorityPickerValue(null);
-                  setValue(null);
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUpdate(null);
                 }}
                 className="text-danger ml-1 text-sm"
               >
