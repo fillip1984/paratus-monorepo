@@ -5,9 +5,10 @@ import { CgListTree } from "react-icons/cg";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { TbProgressCheck } from "react-icons/tb";
 
+import type { TaskDetailType } from "@paratus/api";
+
 import Modal from "~/app/_components/ui/modal";
 import { api } from "~/trpc/react";
-import type { TaskDetailType } from "@paratus/api";
 import DatePicker from "./DatePicker";
 import PriorityPicker from "./PriorityPicker";
 import SectionPicker from "./SectionPicker";

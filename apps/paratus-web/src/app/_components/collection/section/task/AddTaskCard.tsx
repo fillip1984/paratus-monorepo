@@ -25,12 +25,14 @@ export default function AddTaskCard({
   useEffect(() => {
     formRef.current?.querySelector("input")?.focus();
   }, []);
+
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState<Date | null>(defaultDueDate ?? null);
   const [priority, setPriority] = useState<PriorityOption | null>(null);
   const [sectionId, setSectionId] = useState<string | null>(currentSectionId);
   const [isFormValid, setIsFormValid] = useState(false);
+
   const formRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
     if (text.trim()) {
@@ -40,13 +42,21 @@ export default function AddTaskCard({
     }
   }, [text]);
 
+  const resetForm = () => {
+    setText("");
+    setDescription("");
+    setDueDate(defaultDueDate ?? null);
+    setPriority(null);
+    setSectionId(currentSectionId);
+    setIsFormValid(false);
+    formRef.current?.querySelector("input")?.focus();
+  };
+
   const trpc = api.useUtils();
   const { mutate: createTask } = api.task.create.useMutation({
     onSuccess: async () => {
-      console.log("task created");
-      // dismiss()
-      setText("");
-      setDescription("");
+      void trpc.collection.invalidate();
+      resetForm();
       void trpc.collection.readOne.invalidate({
         id: currentCollectionId,
       });

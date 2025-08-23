@@ -1,13 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { FaAngleDown, FaTrash } from "react-icons/fa";
 import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
+
+import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
+
 import { api } from "~/trpc/react";
-import type { SectionDetailType } from "@paratus/api";
+import { isNewSectionAvailable } from "~/utils/collection";
 import { isPermanentSection } from "~/utils/section";
 import PopupMenu from "../../ui/popupMenu";
 import AddSectionCard from "./AddSectionCard";
@@ -15,8 +18,10 @@ import AddTaskCard from "./task/AddTaskCard";
 import TaskCard from "./task/TaskCard";
 
 export default function SectionCard({
+  collection,
   section,
 }: {
+  collection: CollectionDetailType;
   section: SectionDetailType;
 }) {
   // determine default due date
@@ -31,13 +36,6 @@ export default function SectionCard({
       setDefaultDueDate(dd);
     }
   }, [path, section.id]);
-
-  const trpc = api.useUtils();
-  const { mutate: deleteSection } = api.section.delete.useMutation({
-    onSuccess: () => {
-      void trpc.collection.invalidate();
-    },
-  });
 
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSectionCollapsed, setIsSectionCollapsed] = useState(false);
@@ -61,29 +59,7 @@ export default function SectionCard({
         {/* center */}
 
         {/* trailing */}
-        {!isPermanentSection(section.name) && (
-          <PopupMenu
-            button={
-              <button type="button">
-                <FaEllipsisVertical />
-              </button>
-            }
-            content={
-              <div className="bg-foreground rounded-lg p-2">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => deleteSection({ id: section.id })}
-                    className={`text-danger flex items-center gap-2`}
-                  >
-                    <FaTrash /> Delete
-                  </button>
-                  {/* Add more actions here */}
-                </div>
-              </div>
-            }
-          />
-        )}
+        <SectionAdditionalOptions collection={collection} section={section} />
       </div>
       {/* Add tasks or other content here */}
       <AnimatePresence initial={false}>
@@ -102,7 +78,7 @@ export default function SectionCard({
                 />
               ))}
             </div>
-            <div>
+            <div className="my-2">
               {isAddTaskOpen ? (
                 <AddTaskCard
                   currentCollectionId={section.collectionId}
@@ -123,10 +99,56 @@ export default function SectionCard({
           </motion.div>
         )}
       </AnimatePresence>
-      <AddSectionCard
-        collectionId={section.collectionId}
-        addAfter={section.position}
-      />
+
+      {isNewSectionAvailable(collection) && (
+        <AddSectionCard
+          collectionId={section.collectionId}
+          addAfter={section.position}
+        />
+      )}
     </div>
   );
 }
+
+const SectionAdditionalOptions = ({
+  collection,
+  section,
+}: {
+  collection: CollectionDetailType;
+  section: SectionDetailType;
+}) => {
+  const trpc = api.useUtils();
+  const { mutate: deleteSection } = api.section.delete.useMutation({
+    onSuccess: () => {
+      void trpc.collection.invalidate();
+    },
+  });
+
+  return (
+    <>
+      {!isPermanentSection(collection.name, section.name) && (
+        <PopupMenu
+          button={
+            <button type="button">
+              <FaEllipsisVertical />
+            </button>
+          }
+          content={
+            <div className="bg-foreground rounded-lg p-2">
+              <div className="flex flex-col items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => deleteSection({ id: section.id })}
+                  className={`text-danger flex items-center gap-2`}
+                >
+                  <FaTrash /> Delete
+                </button>
+                {/* Add more actions here */}
+              </div>
+            </div>
+          }
+        />
+      )}
+    </>
+  );
+};

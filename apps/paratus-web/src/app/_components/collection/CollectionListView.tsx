@@ -1,6 +1,7 @@
 "use client";
 
 import type { CollectionDetailType } from "@paratus/api";
+
 import SectionCard from "./section/SectionCard";
 
 export default function CollectionListView({
@@ -13,7 +14,11 @@ export default function CollectionListView({
       <div className="snap-y snap-mandatory overflow-y-auto p-2 pb-12">
         <div className="flex w-full max-w-[800px] flex-col gap-2 lg:mx-auto">
           {collection.sections.map((section) => (
-            <SectionCard key={section.id} section={section} />
+            <SectionCard
+              key={section.id}
+              collection={collection}
+              section={section}
+            />
           ))}
         </div>
       </div>
