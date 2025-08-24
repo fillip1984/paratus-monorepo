@@ -76,7 +76,7 @@ export default function TaskCard({
               >
                 {task.text}
               </span>
-              <span className="text-xs">{task.description}</span>
+              <span className="line-clamp-2 text-xs">{task.description}</span>
               <div className="mt-1 flex items-center gap-2 text-xs text-white/60">
                 {task.children.length > 0 && (
                   <div className="flex items-center gap-1">

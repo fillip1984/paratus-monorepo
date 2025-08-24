@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaRegCheckCircle } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
 import { GiSettingsKnobs } from "react-icons/gi";
 import { RiKanbanView2 } from "react-icons/ri";
@@ -19,11 +20,67 @@ export default function CollectionView({
 }: {
   collection: CollectionDetailType;
 }) {
+  const [isEditingCollection, setIsEditingCollection] = useState(false);
+  const currentCollectionNameRef = useRef<HTMLInputElement | null>(null);
+  const [currentCollectionName, setCurrentCollectionName] = useState("");
+  const trpc = api.useUtils();
+  const { mutate: updateCollectionName } = api.collection.update.useMutation({
+    onSuccess: async () => {
+      setIsEditingCollection(false);
+      await trpc.collection.invalidate();
+      await trpc.collection.readOne.invalidate({
+        id: collection.id,
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (collection.name) {
+      setCurrentCollectionName(collection.name);
+    }
+  }, [collection]);
+  useEffect(() => {
+    if (isEditingCollection) {
+      currentCollectionNameRef.current?.focus();
+    }
+  }, [isEditingCollection]);
+
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* heading */}
       <div className="flex items-center justify-between p-2">
-        <h4>{collection.name}</h4>
+        <div className="flex flex-col">
+          {!isEditingCollection ? (
+            <h2
+              onClick={() => {
+                if (!isPermanentCollection(collection.name)) {
+                  setIsEditingCollection((prev) => !prev);
+                }
+              }}
+              className={`rounded p-2 ${!isPermanentCollection(collection.name) ? "hover:border hover:border-white/60" : ""}`}
+            >
+              {collection.name}
+            </h2>
+          ) : (
+            <input
+              type="text"
+              ref={currentCollectionNameRef}
+              value={currentCollectionName}
+              onChange={(e) => setCurrentCollectionName(e.target.value)}
+              onBlur={() =>
+                updateCollectionName({
+                  ...collection,
+                  name: currentCollectionName,
+                })
+              }
+              className="rounded border p-1"
+            />
+          )}
+          <span className="flex items-center gap-2 text-sm font-thin">
+            <FaRegCheckCircle />
+            {collection.sections.flatMap((s) => s.tasks).length} tasks
+          </span>
+        </div>
         <CollectionSettings collection={collection} />
       </div>
 

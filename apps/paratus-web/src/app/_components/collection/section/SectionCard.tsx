@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
@@ -44,6 +44,26 @@ export default function SectionCard({
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSectionCollapsed, setIsSectionCollapsed] = useState(false);
 
+  const [isEditingSection, setIsEditingSection] = useState(false);
+  const currentSectionNameRef = useRef<HTMLInputElement | null>(null);
+  const [currentSectionName, setCurrentSectionName] = useState(section.name);
+  const trpc = api.useUtils();
+  const { mutate: updateSectionName } = api.section.update.useMutation({
+    onSuccess: async () => {
+      setIsEditingSection(false);
+      await trpc.section.invalidate();
+      await trpc.collection.invalidate();
+      await trpc.collection.readOne.invalidate({
+        id: collection.id,
+      });
+    },
+  });
+  useEffect(() => {
+    if (isEditingSection) {
+      currentSectionNameRef.current?.focus();
+    }
+  }, [isEditingSection]);
+
   return (
     <div className="snap-start p-2">
       <div className="flex items-center justify-between border-b py-2">
@@ -58,7 +78,45 @@ export default function SectionCard({
           >
             <FaAngleDown />
           </button>
-          <p className="font-bold">{section.name}</p>
+          <div className="flex-1">
+            {!isEditingSection ? (
+              <div className={`flex items-center gap-2`}>
+                <span
+                  onClick={() => {
+                    if (
+                      !isPermanentSection(collection.name, currentSectionName)
+                    ) {
+                      setIsEditingSection((prev) => !prev);
+                    }
+                  }}
+                  className={`rounded ${!isPermanentSection(collection.name, currentSectionName) ? "cursor-pointer" : ""} ${section.name === "Uncategorized" ? "text-white/60" : section.name === "Overdue" ? "text-danger" : ""}`}
+                >
+                  {currentSectionName}
+                </span>
+                {section._count.tasks > 0 && (
+                  <span className="text-gray text-xs">
+                    {section._count.tasks}
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="text"
+                  ref={currentSectionNameRef}
+                  value={currentSectionName}
+                  onChange={(e) => setCurrentSectionName(e.target.value)}
+                  onBlur={() =>
+                    updateSectionName({
+                      id: section.id,
+                      name: currentSectionName,
+                    })
+                  }
+                  className="rounded border p-1"
+                />
+              </div>
+            )}
+          </div>
         </div>
         {/* center */}
 
