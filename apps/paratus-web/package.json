@@ -40,7 +40,6 @@
     "@paratus/prettier-config": "workspace:*",
     "@paratus/tsconfig": "workspace:*",
     "@eslint/eslintrc": "^3.3.1",
-    "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",

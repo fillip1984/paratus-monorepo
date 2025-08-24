@@ -76,7 +76,7 @@ export default function DatePicker({
     } else {
       setDatePickerValue(null);
     }
-  }, [value, datePickerValue?.value]);
+  }, [value]);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleUpdate = (date: DatePickerType | null) => {

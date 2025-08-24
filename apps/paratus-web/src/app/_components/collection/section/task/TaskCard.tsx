@@ -34,9 +34,12 @@ export default function TaskCard({
     },
   });
 
+  const [complete, setComplete] = useState(task.complete);
+
   const handleToggleComplete = () => {
     console.log("handling complete");
-    updateTask({ ...task, complete: !task.complete });
+    setComplete(!complete);
+    updateTask({ ...task, complete: !complete });
   };
 
   const handleTaskModal = () => {
@@ -63,9 +66,9 @@ export default function TaskCard({
             <RxDragHandleDots2 className="drag-handle" />
             <input
               type="checkbox"
-              checked={task.complete}
+              checked={complete}
               onChange={handleToggleComplete}
-              className="rounded-full bg-inherit"
+              className={`border-secondary hover:bg-secondary/60 mt-[2px] h-4 w-4 cursor-pointer appearance-none rounded-full border-2 ${complete ? "bg-primary" : ""}`}
             />
             <div onClick={handleTaskModal} className="flex flex-1 flex-col">
               <span
@@ -73,7 +76,7 @@ export default function TaskCard({
               >
                 {task.text}
               </span>
-              <span className="text-xs">{task.description}</span>
+              <span className="line-clamp-2 text-xs">{task.description}</span>
               <div className="mt-1 flex items-center gap-2 text-xs text-white/60">
                 {task.children.length > 0 && (
                   <div className="flex items-center gap-1">
