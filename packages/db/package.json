@@ -23,6 +23,8 @@
   "scripts": {
     "build": "tsc",
     "postinstall": "pnpm with-env prisma generate",
+    "format": "prettier --write . --ignore-path ../../.gitignore",
+    "lint": "eslint",
     "generate": "pnpm with-env prisma generate",
     "push": "pnpm with-env prisma db push",
     "studio": "pnpm with-env prisma studio",
