@@ -56,7 +56,7 @@ export default function AddTaskCard({
 
   const trpc = api.useUtils();
   const { mutate: createTask } = api.task.create.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       void trpc.collection.invalidate();
       void trpc.task.invalidate();
       void trpc.collection.readOne.invalidate({

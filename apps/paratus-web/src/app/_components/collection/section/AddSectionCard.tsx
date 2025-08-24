@@ -10,6 +10,7 @@ export default function AddSectionCard({
   collectionId: string;
   addAfter: number;
 }) {
+  console.log("TODO: need to add addAfter", addAfter);
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
   const [sectionName, setSectionName] = useState("");
   const trpc = api.useUtils();

@@ -60,7 +60,7 @@ export default function TaskModal({
 
   const trpc = api.useUtils();
   const { mutate: deleteTask } = api.task.delete.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       console.log("task deleted");
       void trpc.collection.invalidate();
       void trpc.task.invalidate();
@@ -71,7 +71,7 @@ export default function TaskModal({
     },
   });
   const { mutate: updateTask } = api.task.update.useMutation({
-    onSuccess: async () => {
+    onSuccess: () => {
       void trpc.collection.invalidate();
       void trpc.task.invalidate();
       void trpc.collection.readOne.invalidate({
@@ -255,7 +255,7 @@ export default function TaskModal({
             </div>
           </div>
           <div className="mt-4 ml-6 flex flex-col">
-            {task.children && task.children.length > 0 && (
+            {task.children.length > 0 && (
               <button
                 type="button"
                 onClick={() => setIsCollapsed((prev) => !prev)}
