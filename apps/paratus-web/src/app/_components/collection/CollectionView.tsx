@@ -19,8 +19,6 @@ export default function CollectionView({
 }: {
   collection: CollectionDetailType;
 }) {
-  // const [selectedView, setSelectedView] = useState<"kanban" | "list">("list");
-
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       {/* heading */}
