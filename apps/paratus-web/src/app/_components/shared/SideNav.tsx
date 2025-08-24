@@ -31,7 +31,7 @@ export default function SideNav() {
       (c) => c.name === "Inbox",
     );
     if (possibleInboxCollection) {
-      console.log(possibleInboxCollection);
+      // console.log(possibleInboxCollection);
       setInboxCollection(possibleInboxCollection);
     }
   }, [collections]);

@@ -112,7 +112,7 @@ export const sectionRouter = createTRPCRouter({
   //       }
   //     })
   //   }),
-  reoder: publicProcedure
+  reorder: publicProcedure
     .input(z.array(z.object({ id: z.string().min(1), position: z.number() })))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.$transaction(async (tx) => {

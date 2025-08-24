@@ -2,12 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { startOfDay } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
 import { FaAngleDown, FaTrash } from "react-icons/fa";
 import { FaEllipsisVertical, FaPlus } from "react-icons/fa6";
+import { RxDragHandleDots2 } from "react-icons/rx";
 
-import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
+import type {
+  CollectionDetailType,
+  SectionDetailType,
+  TaskDetailType,
+} from "@paratus/api";
 
 import { api } from "~/trpc/react";
 import { isNewSectionAvailable } from "~/utils/collection";
@@ -64,11 +70,51 @@ export default function SectionCard({
     }
   }, [isEditingSection]);
 
+  // DnD
+  const [parentRef, draggableTasks, setValues] = useDragAndDrop<
+    HTMLDivElement,
+    TaskDetailType
+  >([], {
+    dragHandle: ".drag-handle",
+    group: "section",
+    onDragend: (data) => {
+      const sectionId = data.parent.el.dataset.label;
+      if (!sectionId) {
+        console.error("No sectionId found for reorder");
+        return;
+      }
+      reorderTasks(
+        data.values.map((task, index) => ({
+          id: (task as TaskDetailType).id,
+          position: index,
+          sectionId: sectionId,
+        })),
+      );
+    },
+  });
+  useEffect(() => {
+    // console.log('setting values for section', section.id)
+    setValues(section.tasks.filter((t) => !t.parentId));
+  }, [section, setValues]);
+
+  const { mutate: reorderTasks } = api.task.reorder.useMutation({
+    onSuccess: async () => {
+      await trpc.task.invalidate();
+      await trpc.collection.readAll.invalidate();
+      // await trpc.collection.readOne.invalidate({
+      //   id: currentCollectionId
+      // });
+      await trpc.task.today.invalidate();
+      // await trpc.collection.inbox.invalidate();
+    },
+  });
+
   return (
     <div className="snap-start p-2">
       <div className="flex items-center justify-between border-b py-2">
         {/* leading */}
         <div className="flex items-center gap-1">
+          <RxDragHandleDots2 className="drag-handle" />
           <button
             type="button"
             onClick={() => setIsSectionCollapsed((prev) => !prev)}
@@ -131,8 +177,8 @@ export default function SectionCard({
             initial={{ opacity: 0.2, height: 0.2 }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <div>
-              {section.tasks.map((task) => (
+            <div ref={parentRef} data-label={section.id} className="min-h-4">
+              {draggableTasks.map((task) => (
                 <TaskCard
                   key={task.id}
                   task={task}
