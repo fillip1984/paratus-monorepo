@@ -9,14 +9,15 @@ import {
 
 import "react-native-reanimated";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { queryClient } from "@/utils/api";
 import { QueryClientProvider } from "@tanstack/react-query";
+
+import { useColorScheme } from "~/hooks/useColorScheme";
+import { queryClient } from "~/utils/api";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    SpaceMono: require("~/assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   if (!loaded) {
