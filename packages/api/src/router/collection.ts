@@ -180,6 +180,7 @@ async function fetchCollection(id: string, ctx: trpcContextShape) {
               position: "asc",
             },
             include: {
+              comments: true,
               children: {
                 select: {
                   complete: true,

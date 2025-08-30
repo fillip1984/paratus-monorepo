@@ -11,6 +11,7 @@ export const taskRouter = createTRPCRouter({
         position: "asc",
       },
       include: {
+        comments: true,
         children: {
           select: {
             complete: true,
@@ -42,6 +43,7 @@ export const taskRouter = createTRPCRouter({
         position: "asc",
       },
       include: {
+        comments: true,
         children: {
           select: {
             complete: true,

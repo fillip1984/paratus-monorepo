@@ -3,11 +3,18 @@
 import type { PriorityOption } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import { format } from "date-fns";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
-import { FaEllipsis, FaPlus, FaX } from "react-icons/fa6";
+import {
+  FaEllipsis,
+  FaEllipsisVertical,
+  FaPencil,
+  FaPlus,
+  FaX,
+} from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 
-import type { TaskDetailType } from "@paratus/api";
+import type { CommentType, TaskDetailType } from "@paratus/api";
 
 import DatePicker from "~/app/_components/shared/DatePicker";
 import PriorityPicker from "~/app/_components/shared/PriorityPicker";
@@ -158,9 +165,6 @@ const MainContent = ({
     }
   }, [isEditingTextOrDescriptionTarget]);
 
-  const [isAddingSubTask, setIsAddingSubTask] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
   const handleComplete = () => {
     console.log("handling complete");
     updateTask({ ...task, complete: true });
@@ -170,6 +174,83 @@ const MainContent = ({
     updateTask({ ...task, text, description });
     setIsEditingTextOrDescriptionTarget("");
   };
+
+  return (
+    <div className="flex flex-1 flex-col overflow-x-auto p-2 pb-4">
+      <div className="flex gap-2">
+        <input
+          type="checkbox"
+          onClick={handleComplete}
+          className="mt-1 rounded-full bg-inherit"
+        />
+        <div className="flex flex-1 flex-col">
+          {isEditingTextOrDescriptionTarget ? (
+            <div className="flex flex-col rounded-lg border border-white/30 p-1">
+              <input
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                ref={textEditingRef}
+                placeholder="Task..."
+              />
+              <TextareaAutosize
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                ref={descriptionEditingRef}
+                placeholder="Description..."
+                className="m-0 border-0 bg-inherit p-0 text-xs"
+              ></TextareaAutosize>
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  className="button-secondary button-compact"
+                  onClick={() => setIsEditingTextOrDescriptionTarget("")}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="button-primary button-compact"
+                  onClick={handleUpdateTextAndDescription}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-1 flex-col">
+              <span onClick={() => setIsEditingTextOrDescriptionTarget("text")}>
+                {text}
+              </span>
+              <span
+                onClick={() =>
+                  setIsEditingTextOrDescriptionTarget("description")
+                }
+                className="text-gray m-0 border-0 bg-inherit p-0 text-xs"
+              >
+                {description.length > 0 ? description : "Description..."}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="mt-4 ml-6 flex flex-col gap-2">
+        <SubTasks task={task} collectionId={collectionId} />
+        <Comments task={task} />
+      </div>
+    </div>
+  );
+};
+
+const SubTasks = ({
+  task,
+  collectionId,
+}: {
+  task: TaskDetailType;
+  collectionId: string;
+}) => {
+  const [isAddingSubTask, setIsAddingSubTask] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // DnD
   const [draggableParentRef, draggableSubTasks, setValues] = useDragAndDrop<
@@ -213,82 +294,24 @@ const MainContent = ({
   });
 
   return (
-    <div className="flex flex-1 flex-col overflow-x-auto p-2 pb-4">
-      <div className="flex gap-2">
-        <input
-          type="checkbox"
-          onClick={handleComplete}
-          className="mt-1 rounded-full bg-inherit"
+    <>
+      <button
+        type="button"
+        onClick={() => setIsCollapsed((prev) => !prev)}
+        className="flex items-center gap-1"
+      >
+        <FaChevronDown
+          className={`transition ${isCollapsed ? "-rotate-90" : ""}`}
         />
-        <div className="flex flex-1 flex-col">
-          {isEditingTextOrDescriptionTarget ? (
-            <div className="flex flex-col rounded-lg border border-white/30 p-1">
-              <input
-                type="text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                ref={textEditingRef}
-                placeholder="Task..."
-              />
-              <TextareaAutosize
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                ref={descriptionEditingRef}
-                placeholder="Description..."
-                className="text-muted m-0 border-0 bg-inherit p-0 text-xs"
-              ></TextareaAutosize>
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  className="button-secondary button-compact"
-                  onClick={() => setIsEditingTextOrDescriptionTarget("")}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="button-primary button-compact"
-                  onClick={handleUpdateTextAndDescription}
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-1 flex-col">
-              <span onClick={() => setIsEditingTextOrDescriptionTarget("text")}>
-                {text}
-              </span>
-              <span
-                onClick={() =>
-                  setIsEditingTextOrDescriptionTarget("description")
-                }
-                className="text-muted m-0 border-0 bg-inherit p-0 text-xs"
-              >
-                {description.length > 0 ? description : "Description..."}
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="mt-4 ml-6 flex flex-col">
-        {/* {task.children.length > 0 && ( */}
-        <button
-          type="button"
-          onClick={() => setIsCollapsed((prev) => !prev)}
-          className="flex items-center gap-1"
-        >
-          <FaChevronDown
-            className={`transition ${isCollapsed ? "-rotate-90" : ""}`}
-          />
-          Sub-tasks
-          <span className="text-muted text-xs">
-            {task.children.filter((t) => t.complete).length}/
-            {task.children.length}
-          </span>
-        </button>
-        {/* )} */}
-        {!isCollapsed && (
+        Sub-tasks
+        <span className="text-gray text-xs">
+          {task.children.filter((t) => t.complete).length}/
+          {task.children.length}
+        </span>
+      </button>
+      {/* )} */}
+      {!isCollapsed && (
+        <>
           <div ref={draggableParentRef} className="ml-2 flex flex-col gap-1">
             {draggableSubTasks.map((subtask) => (
               <TaskCard
@@ -298,27 +321,178 @@ const MainContent = ({
               />
             ))}
           </div>
-        )}
-        <div className="my-1">
-          {isAddingSubTask ? (
-            <AddTaskCard
-              currentCollectionId={collectionId}
-              parentTaskId={task.id}
-              defaultDueDate={null}
-              defaultSectionId={task.sectionId}
-              dismiss={() => setIsAddingSubTask((prev) => !prev)}
-            />
-          ) : (
+          <div className="my-1">
+            {isAddingSubTask ? (
+              <AddTaskCard
+                currentCollectionId={collectionId}
+                parentTaskId={task.id}
+                defaultDueDate={null}
+                defaultSectionId={task.sectionId}
+                dismiss={() => setIsAddingSubTask((prev) => !prev)}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsAddingSubTask((prev) => !prev)}
+                className="flex w-fit items-center gap-2 rounded p-1 text-sm hover:bg-white/30"
+              >
+                <FaPlus /> Add sub-task
+              </button>
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+const Comments = ({ task }: { task: TaskDetailType }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isAddingComment, setIsAddingComment] = useState(false);
+  const commentEditingRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (isAddingComment) {
+      commentEditingRef.current?.focus();
+    }
+    // if (isEditingTextOrDescriptionTarget === "text") {
+    //   textEditingRef.current?.focus();
+    // } else if (isEditingTextOrDescriptionTarget === "description") {
+    //   descriptionEditingRef.current?.focus();
+    //   descriptionEditingRef.current?.setSelectionRange(
+    //     descriptionEditingRef.current.value.length,
+    //     descriptionEditingRef.current.value.length,
+    //   );
+    // }
+  }, [isAddingComment]);
+  const [comment, setComment] = useState("");
+
+  const trpc = api.useUtils();
+  const { mutate: addComment } = api.comment.create.useMutation({
+    onSuccess: () => {
+      setComment("");
+      void trpc.task.invalidate();
+      void trpc.collection.invalidate();
+    },
+  });
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setIsCollapsed((prev) => !prev)}
+        className="flex items-center gap-1"
+      >
+        <FaChevronDown
+          className={`transition ${isCollapsed ? "-rotate-90" : ""}`}
+        />
+        Comments
+        <span className="text-gray text-xs">{task.comments.length}</span>
+      </button>
+      {isCollapsed ? null : (
+        <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
+            {task.comments.map((comment) => (
+              <CommentCard key={comment.id} comment={comment} />
+            ))}
+          </div>
+          <div className="">
+            {isAddingComment ? (
+              <div className="border-gray flex flex-col rounded-lg border p-2">
+                <TextareaAutosize
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  ref={commentEditingRef}
+                  minRows={3}
+                  placeholder="Comment..."
+                  className="m-0 border-0 bg-inherit p-0 text-xs"
+                ></TextareaAutosize>
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingComment(false)}
+                    className="border-secondary rounded border p-1 text-xs"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      addComment({ taskId: task.id, text: comment })
+                    }
+                    className="bg-primary rounded p-1 text-xs"
+                  >
+                    Comment
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setIsAddingComment((prev) => !prev)}
+                className="flex w-fit items-center gap-2 rounded p-1 text-sm hover:bg-white/30"
+              >
+                <FaPlus /> Add comment
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const CommentCard = ({ comment }: { comment: CommentType }) => {
+  const [isCommentAdditionalOptionsOpen, setIsCommentAdditionalOptionsOpen] =
+    useState(false);
+
+  const trpc = api.useUtils();
+  const { mutate: deleteComment } = api.comment.delete.useMutation({
+    onSuccess: () => {
+      void trpc.task.invalidate();
+      void trpc.collection.invalidate();
+    },
+  });
+
+  return (
+    <div key={comment.id} className="border-gray flex gap-2 border-b p-2">
+      <span className="bg-primary flex h-5 w-5 items-center justify-center rounded-full text-xs text-white">
+        F
+      </span>
+      <div className="flex flex-col">
+        <div className="text-gray text-xs">
+          {/* <span className="font-bold">{comment.user.name}</span> */}
+          <p>{format(comment.posted, "MMM dd hh:mm a")}</p>
+        </div>
+        <p className="text-white">{comment.text}</p>
+      </div>
+      <PopupMenu
+        isOpen={isCommentAdditionalOptionsOpen}
+        setIsOpen={() => setIsCommentAdditionalOptionsOpen((prev) => !prev)}
+        button={
+          <button type="button" className="ml-auto">
+            <FaEllipsisVertical />
+          </button>
+        }
+        content={
+          <div className="bg-background flex w-[100px] flex-col gap-1 rounded-lg p-1">
+            {/* <button
+              type="button"
+              className="text-gray flex items-center gap-2 rounded p-1 text-xs hover:bg-white/10"
+            >
+              <FaPencil />
+              Edit
+            </button> */}
             <button
               type="button"
-              onClick={() => setIsAddingSubTask((prev) => !prev)}
-              className="flex w-fit items-center gap-2 rounded p-1 text-sm hover:bg-white/30"
+              className="text-danger hover:bg-danger/10 flex items-center gap-2 rounded p-1 text-xs"
+              onClick={() => deleteComment({ id: comment.id })}
             >
-              <FaPlus /> Add sub-task
+              <FaTrash />
+              Delete
             </button>
-          )}
-        </div>
-      </div>
+          </div>
+        }
+      />
     </div>
   );
 };

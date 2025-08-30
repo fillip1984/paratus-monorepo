@@ -12,3 +12,4 @@ export type CollectionDetailType = NonNullable<
 >;
 export type SectionDetailType = CollectionDetailType["sections"][number];
 export type TaskDetailType = SectionDetailType["tasks"][number];
+export type CommentType = TaskDetailType["comments"][number];
