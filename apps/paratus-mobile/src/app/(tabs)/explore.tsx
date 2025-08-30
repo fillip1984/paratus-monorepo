@@ -1,7 +1,5 @@
 import { Platform, StyleSheet, Text, View } from "react-native";
-import { Image } from "expo-image";
-
-// import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Collapsible } from "~/components/Collapsible";
 import { ExternalLink } from "~/components/ExternalLink";
@@ -9,12 +7,13 @@ import ParallaxScrollView from "~/components/ParallaxScrollView";
 import { ThemedText } from "~/components/ThemedText";
 import { ThemedView } from "~/components/ThemedView";
 import { IconSymbol } from "~/components/ui/IconSymbol";
-
-// import { trpc } from "~/utils/api";
+import { useRefreshOnFocus } from "~/hooks/useRefreshOnFocus";
+import { trpc } from "~/utils/api";
 
 export default function TabTwoScreen() {
-  // const queryClient = useQueryClient();
-  // const collections = useQuery(trpc.collection.readAll.queryOptions());
+  const collections = useQuery(trpc.collection.readAll.queryOptions());
+  useRefreshOnFocus(collections.refetch);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
@@ -33,12 +32,12 @@ export default function TabTwoScreen() {
       <ThemedText>
         This app includes example code to help you get started.
       </ThemedText>
-      {/* <Text>{collections.data?.length} collections found</Text> */}
-      {/* <View>
+      <Text>{collections.data?.length} collections found</Text>
+      <View>
         {collections.data?.map((collection) => (
-          <Text key={collection.id}>${collection.name}</Text>
+          <Text key={collection.id}>{collection.name}</Text>
         ))}
-      </View> */}
+      </View>
       <Collapsible title="File-based routing">
         <ThemedText>
           This app has two screens:{" "}
@@ -69,10 +68,6 @@ export default function TabTwoScreen() {
           <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
           provide files for different screen densities
         </ThemedText>
-        <Image
-          source={require("~/assets/images/react-logo.png")}
-          style={{ alignSelf: "center" }}
-        />
         <ExternalLink href="https://reactnative.dev/docs/images">
           <ThemedText type="link">Learn more</ThemedText>
         </ExternalLink>
