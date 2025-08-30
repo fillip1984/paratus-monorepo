@@ -19,6 +19,8 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
+import "~/styles/global.css";
+
 import { useColorScheme } from "~/hooks/useColorScheme";
 import { queryClient } from "~/utils/api";
 

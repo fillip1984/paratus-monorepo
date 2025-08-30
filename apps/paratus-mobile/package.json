@@ -60,7 +60,7 @@
     "eslint": "catalog:",
     "eslint-config-expo": "~9.2.0",
     "prettier": "catalog:",
-    "tailwindcss": "catalog:",
+    "tailwindcss": "^3.4.17",
     "typescript": "catalog:"
   },
   "prettier": "@paratus/prettier-config"
