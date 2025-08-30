@@ -115,9 +115,12 @@ export default function SectionPicker({
       button={
         <button
           type="button"
-          className="text-white/60] flex items-center gap-2 rounded border border-white/30 px-2 py-1 text-sm"
+          className="flex items-center gap-2 rounded border border-white/30 px-2 py-1 text-sm text-white/60"
         >
-          {sectionPickerValue?.selectedLabel} <FaAngleDown />
+          <span className="truncate text-ellipsis whitespace-nowrap">
+            {sectionPickerValue?.selectedLabel}
+          </span>{" "}
+          <FaAngleDown />
         </button>
       }
       content={

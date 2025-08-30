@@ -14,7 +14,6 @@ export const commentRouter = createTRPCRouter({
     .input(
       z.object({
         text: z.string().min(1),
-        posted: z.date(),
         taskId: z.string().min(1),
       }),
     )
@@ -22,7 +21,7 @@ export const commentRouter = createTRPCRouter({
       return await ctx.db.comment.create({
         data: {
           text: input.text,
-          posted: input.posted,
+          posted: new Date(),
           taskId: input.taskId,
         },
       });
