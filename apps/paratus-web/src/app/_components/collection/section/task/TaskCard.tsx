@@ -3,6 +3,7 @@
 import type { PriorityOption } from "@prisma/client";
 import { useState } from "react";
 import { CgListTree } from "react-icons/cg";
+import { FaCommentDots } from "react-icons/fa6";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import { TbProgressCheck } from "react-icons/tb";
 
@@ -77,7 +78,7 @@ export default function TaskCard({
                 {task.text}
               </span>
               <span className="line-clamp-2 text-xs">{task.description}</span>
-              <div className="mt-1 flex items-center gap-2 text-xs text-white/60">
+              <div className="text-gray mt-1 flex items-center gap-2 text-xs">
                 {task.children.length > 0 && (
                   <div className="flex items-center gap-1">
                     <CgListTree />{" "}
@@ -86,6 +87,11 @@ export default function TaskCard({
                   </div>
                 )}
                 {task.parentId && <TbProgressCheck />}
+                {task.comments.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    <FaCommentDots /> {task.comments.length}
+                  </div>
+                )}
                 <DatePicker
                   value={task.dueDate}
                   setValue={handleTaskDueDateChange}
