@@ -1,47 +1,51 @@
 import React from "react";
-import { Platform } from "react-native";
 import { Tabs } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { HapticTab } from "~/components/HapticTab";
-import { IconSymbol } from "~/components/ui/IconSymbol";
-import TabBarBackground from "~/components/ui/TabBarBackground";
-import { Colors } from "~/constants/Colors";
-import { useColorScheme } from "~/hooks/useColorScheme";
+import { HapticTab } from "~/components/ui/HapticTab";
+import { Colors } from "~/styles/colors";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
+        tabBarActiveTintColor: Colors.primary,
+        tabBarStyle: {
+          backgroundColor: Colors.foreground,
+          borderBlockColor: Colors.foreground,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Today",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <Ionicons name="today-outline" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="upcoming"
         options={{
-          title: "Explore",
+          title: "Upcoming",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <Ionicons name="calendar-outline" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="collections"
+        options={{
+          title: "Collections",
+          tabBarIcon: ({ color }) => (
+            <Ionicons
+              name="file-tray-stacked-outline"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />

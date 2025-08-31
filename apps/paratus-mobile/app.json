@@ -1,26 +1,27 @@
 {
   "expo": {
-    "name": "paratus-mobile",
-    "slug": "paratus-mobile",
+    "name": "paratus",
+    "slug": "paratus",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
-    "scheme": "paratusmobile",
+    "scheme": "paratus",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fillip1984.paratus-mobile",
+      "bundleIdentifier": "com.fillip1984.paratus",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.fillip1984.paratus"
     },
     "web": {
       "bundler": "metro",
@@ -32,10 +33,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./src/assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./src/assets/images/splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#000000",
+          "imageWidth": 800
         }
       ]
     ],
@@ -45,7 +46,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "abf5b46f-678f-4ec1-8b46-99b3249e891d"
+        "projectId": "164c9890-d144-492e-9921-0f53d87df277"
       }
     }
   }
