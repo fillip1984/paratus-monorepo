@@ -1,11 +1,5 @@
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 
 import "react-native-reanimated";
 
@@ -21,15 +15,9 @@ import {
 
 import "~/styles/global.css";
 
-import { useColorScheme } from "~/hooks/useColorScheme";
 import { queryClient } from "~/utils/api";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require("~/assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
   // refetch when network connection is restored
   onlineManager.setEventListener((setOnline) => {
     const eventSubscription = Network.addNetworkStateListener((state) => {
@@ -49,20 +37,13 @@ export default function RootLayout() {
     return () => subscription.remove();
   }, []);
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="light" />
     </QueryClientProvider>
   );
 }
