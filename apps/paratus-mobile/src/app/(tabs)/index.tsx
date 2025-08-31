@@ -5,8 +5,8 @@ export default function TodayScreen() {
   return (
     <SafeAreaView style={{ backgroundColor: "rgb(30 41 59)" }}>
       <View className="h-screen bg-black">
-        <Ionicons name="home" size={24} color="black" />
-        <Text className="text-black">
+        <Ionicons name="home" size={24} color="white" />
+        <Text className="text-white">
           Welcome to Nativewind! Lorem ipsum dolor sit, amet consectetur
           adipisicing elit. Deserunt unde fugiat officia repudiandae totam
           accusamus facere aliquid voluptatibus distinctio maiores atque soluta
