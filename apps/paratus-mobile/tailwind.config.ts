@@ -6,6 +6,7 @@ export default {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [nativewind],
   theme: {
+    // Duplicated to src/styles/colors.ts
     colors: {
       primary: "#8da770",
       secondary: "#eaefd3",

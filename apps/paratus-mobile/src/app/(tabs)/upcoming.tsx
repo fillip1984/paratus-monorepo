@@ -1,5 +1,7 @@
 import { SafeAreaView, Text, View } from "react-native";
 
+import { Colors } from "~/styles/colors";
+
 // import { useQuery } from "@tanstack/react-query";
 
 // import { useRefreshOnFocus } from "~/hooks/useRefreshOnFocus";
@@ -10,8 +12,8 @@ export default function UpcomingScreen() {
   // useRefreshOnFocus(collections.refetch);
 
   return (
-    <SafeAreaView style={{ backgroundColor: "rgb(30 41 59)" }}>
-      <View className="h-screen bg-black">
+    <SafeAreaView style={{ backgroundColor: Colors.background }}>
+      <View className="h-screen bg-background">
         <Text className="text-white">Upcoming</Text>
       </View>
     </SafeAreaView>

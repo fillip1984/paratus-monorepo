@@ -41,6 +41,16 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(collections)/[id]"
+          options={{
+            title: "",
+            headerShown: false,
+            // headerBackButtonDisplayMode: "minimal",
+            // presentation: "fullScreenModal",
+            // headerBackButtonMenuEnabled: true,
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="light" />

@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { HapticTab } from "~/components/ui/HapticTab";
+import { Colors } from "~/styles/colors";
 
 export default function TabLayout() {
   return (
@@ -10,10 +11,10 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarActiveTintColor: "#fff",
+        tabBarActiveTintColor: Colors.primary,
         tabBarStyle: {
-          backgroundColor: "rgb(30 41 59)",
-          borderBlockColor: "rgb(30 41 59)",
+          backgroundColor: Colors.foreground,
+          borderBlockColor: Colors.foreground,
         },
       }}
     >
