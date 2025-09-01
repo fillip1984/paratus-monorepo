@@ -1,9 +1,11 @@
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { format, isSameDay, startOfDay } from "date-fns";
 
 import type { CollectionDetailType, SectionDetailType } from "@paratus/api";
 
+import CollectionView from "~/components/collection/CollectionView";
+import LoadOrRetry from "~/components/shared/LoadOrRetry";
 import { useRefreshOnFocus } from "~/hooks/useRefreshOnFocus";
 import { Colors } from "~/styles/colors";
 import { trpc } from "~/utils/api";
@@ -50,16 +52,13 @@ export default function TodayScreen() {
   return (
     <SafeAreaView style={{ backgroundColor: Colors.background }}>
       <View className="h-screen bg-background">
-        {today.sections.map((section) => (
-          <View key={section.id} className="border-b border-gray/30">
-            <Text className="font-bold text-white">{section.name}</Text>
-            {section.tasks.map((task) => (
-              <View key={task.id} className="py-2">
-                <Text className="text-white">{task.text}</Text>
-              </View>
-            ))}
-          </View>
-        ))}
+        <LoadOrRetry
+          isLoading={tasks.isLoading}
+          isError={tasks.isError}
+          retry={tasks.refetch}
+        />
+
+        {tasks.data && <CollectionView collection={today} />}
       </View>
     </SafeAreaView>
   );

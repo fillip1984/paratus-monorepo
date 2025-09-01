@@ -30,22 +30,30 @@ export default function SectionCard({
   collection: CollectionDetailType;
   section: SectionDetailType;
 }) {
-  // determine default due date
+  // determine default due date and default section
   const [defaultDueDate, setDefaultDueDate] = useState<Date | null>(null);
   const [defaultSectionId, setDefaultSectionId] = useState<string>(section.id);
+  const { data: inboxId } = api.collection.inboxId.useQuery();
+  const { data: inbox } = api.collection.readOne.useQuery(
+    { id: inboxId ?? "" },
+    { enabled: !!inboxId },
+  );
+
   const path = usePathname();
   useEffect(() => {
+    if (!inboxId) return;
+    const uncategorized = inbox?.sections.find(
+      (s) => s.name === "Uncategorized",
+    );
+    if (!uncategorized) return;
     if (path === "/today") {
       setDefaultDueDate(startOfDay(new Date()));
-      setDefaultSectionId("inbox");
+      setDefaultSectionId(uncategorized.id);
     } else if (path === "/upcoming") {
-      console.log({ collectionName: collection.name, sectionId: section.id });
-      const dd = new Date(Number(section.id));
-      console.log(dd);
-      setDefaultDueDate(dd);
-      setDefaultSectionId("inbox");
+      setDefaultDueDate(new Date(Number(section.id)));
+      setDefaultSectionId(uncategorized.id);
     }
-  }, [collection.name, path, section.id]);
+  }, [collection.name, path, section.id, inboxId, inbox]);
 
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isSectionCollapsed, setIsSectionCollapsed] = useState(false);

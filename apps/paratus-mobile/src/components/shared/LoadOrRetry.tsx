@@ -22,7 +22,7 @@ export default function LoadOrRetry({
           </Text>
           <Pressable
             onPress={retry}
-            className="bg-primary flex items-center justify-center rounded px-2 py-4"
+            className="flex items-center justify-center rounded bg-primary px-2 py-4"
           >
             <Text className="text-3xl text-white">Retry</Text>
           </Pressable>
