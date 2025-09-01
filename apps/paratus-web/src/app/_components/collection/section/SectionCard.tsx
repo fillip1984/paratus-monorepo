@@ -30,7 +30,7 @@ export default function SectionCard({
   collection: CollectionDetailType;
   section: SectionDetailType;
 }) {
-  // determine default due date
+  // determine default due date and default section
   const [defaultDueDate, setDefaultDueDate] = useState<Date | null>(null);
   const [defaultSectionId, setDefaultSectionId] = useState<string>(section.id);
   const { data: inboxId } = api.collection.inboxId.useQuery();

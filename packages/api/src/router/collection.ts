@@ -61,6 +61,27 @@ export const collectionRouter = createTRPCRouter({
         return fetchCollection(input.id, ctx);
       }
     }),
+  findBySectionId: publicProcedure
+    .input(z.object({ sectionId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const collectionId = await ctx.db.collection.findFirst({
+        where: {
+          sections: {
+            some: {
+              id: input.sectionId,
+            },
+          },
+        },
+        select: { id: true },
+      });
+      if (!collectionId) {
+        throw new Error(
+          `Unable to find collection by sectionId: ${input.sectionId}`,
+        );
+      }
+      // return await fetchCollection(collectionId?.id ?? "", ctx);
+      return await fetchCollection(collectionId.id, ctx);
+    }),
   // inbox: publicProcedure.query(async ({ ctx }) => {
   //   const inboxId = (await findOrCreateInbox(ctx)).id;
   //   return await fetchCollection(inboxId, ctx);
