@@ -20,6 +20,7 @@
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-query-devtools": "5.85.3",
     "@trpc/client": "catalog:",
+    "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
     "@xobotyi/scrollbar-width": "^1.9.5",

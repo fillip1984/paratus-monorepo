@@ -7,22 +7,22 @@ settings:
 catalogs:
   default:
     '@prisma/client':
-      specifier: 6.13.0
+      specifier: ^6.13.0
       version: 6.13.0
     '@tanstack/react-query':
-      specifier: 5.85.3
+      specifier: ^5.85.3
       version: 5.85.3
     '@trpc/client':
-      specifier: 11.0.0
+      specifier: ^11.0.0
       version: 11.0.0
     '@trpc/react-query':
-      specifier: 11.0.0
+      specifier: ^11.0.0
       version: 11.0.0
     '@trpc/server':
-      specifier: 11.0.0
+      specifier: ^11.0.0
       version: 11.0.0
     '@trpc/tanstack-react-query':
-      specifier: 11.0.0
+      specifier: ^11.0.0
       version: 11.0.0
     '@types/node':
       specifier: ^22.13.14
@@ -43,7 +43,7 @@ catalogs:
       specifier: ^3.6.2
       version: 3.6.2
     prisma:
-      specifier: 6.13.0
+      specifier: ^6.13.0
       version: 6.13.0
     superjson:
       specifier: ^2.2.2
@@ -52,23 +52,23 @@ catalogs:
       specifier: ^4.1.12
       version: 4.1.12
     typescript:
-      specifier: 5.8.3
+      specifier: ^5.8.3
       version: 5.8.3
     zod:
       specifier: ^4.0.17
       version: 4.1.5
   react19:
     '@types/react':
-      specifier: 19.0.10
+      specifier: ^19.0.10
       version: 19.0.10
     '@types/react-dom':
-      specifier: 19.1.9
+      specifier: ^19.1.9
       version: 19.1.9
     react:
-      specifier: 19.0.0
+      specifier: ^19.0.0
       version: 19.0.0
     react-dom:
-      specifier: 19.0.0
+      specifier: ^19.0.0
       version: 19.0.0
 
 importers:
@@ -266,6 +266,9 @@ importers:
       '@trpc/client':
         specifier: 'catalog:'
         version: 11.0.0(@trpc/server@11.0.0(typescript@5.8.3))(typescript@5.8.3)
+      '@trpc/react-query':
+        specifier: 'catalog:'
+        version: 11.0.0(@tanstack/react-query@5.85.3(react@19.0.0))(@trpc/client@11.0.0(@trpc/server@11.0.0(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.0.0(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(typescript@5.8.3)
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.0.0(typescript@5.8.3)
