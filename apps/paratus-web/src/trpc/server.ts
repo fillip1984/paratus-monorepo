@@ -7,6 +7,7 @@ import { createHydrationHelpers } from "@trpc/react-query/rsc";
 import type { AppRouter } from "@paratus/api";
 import { createCaller, createTRPCContext } from "@paratus/api";
 
+import { auth } from "~/auth/server";
 import { createQueryClient } from "./query-client";
 
 /**
