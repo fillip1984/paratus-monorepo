@@ -11,6 +11,7 @@
     "build:mobile": "pnpm --filter !paratus-web run build",
     "build:web": "pnpm --filter !paratus-mobile run build",
     "clean": "git clean -xdf",
+    "auth:generate": "pnpm -F @paratus/auth generate",
     "format": "pnpm -r run format",
     "lint": "pnpm -r run lint",
     "db:generate": "pnpm --filter db run generate",

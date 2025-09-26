@@ -1,7 +1,10 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { authEnv } from "@paratus/auth/env";
+
 export const env = createEnv({
+  extends: [authEnv()],
   /**
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
