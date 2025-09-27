@@ -1,11 +1,12 @@
 import { z } from "zod/v4";
 
 import type { trpcContextShape } from "../trpc";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const collectionRouter = createTRPCRouter({
-  readAll: publicProcedure.query(async ({ ctx }) => {
+  readAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.collection.findMany({
+      where: { userId: ctx.session.user.id },
       select: {
         id: true,
         name: true,
@@ -46,7 +47,7 @@ export const collectionRouter = createTRPCRouter({
     // 	};
     // });
   }),
-  readOne: publicProcedure
+  readOne: protectedProcedure
     .input(z.object({ id: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       if ("inbox" === input.id.toLowerCase()) {
@@ -61,11 +62,12 @@ export const collectionRouter = createTRPCRouter({
         return fetchCollection(input.id, ctx);
       }
     }),
-  findBySectionId: publicProcedure
+  findBySectionId: protectedProcedure
     .input(z.object({ sectionId: z.string().min(1) }))
     .query(async ({ ctx, input }) => {
       const collectionId = await ctx.db.collection.findFirst({
         where: {
+          userId: ctx.session.user.id,
           sections: {
             some: {
               id: input.sectionId,
@@ -79,14 +81,9 @@ export const collectionRouter = createTRPCRouter({
           `Unable to find collection by sectionId: ${input.sectionId}`,
         );
       }
-      // return await fetchCollection(collectionId?.id ?? "", ctx);
       return await fetchCollection(collectionId.id, ctx);
     }),
-  // inbox: publicProcedure.query(async ({ ctx }) => {
-  //   const inboxId = (await findOrCreateInbox(ctx)).id;
-  //   return await fetchCollection(inboxId, ctx);
-  // }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         name: z.string().min(1),
@@ -103,13 +100,15 @@ export const collectionRouter = createTRPCRouter({
               {
                 name: "Uncategorized",
                 position: 0,
+                userId: ctx.session.user.id,
               },
             ],
           },
+          userId: ctx.session.user.id,
         },
       });
     }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.string().min(1),
@@ -123,6 +122,7 @@ export const collectionRouter = createTRPCRouter({
       return await ctx.db.collection.update({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
         data: {
           name: input.name,
@@ -132,7 +132,7 @@ export const collectionRouter = createTRPCRouter({
         },
       });
     }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -142,10 +142,11 @@ export const collectionRouter = createTRPCRouter({
       return await ctx.db.collection.delete({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
       });
     }),
-  reorder: publicProcedure
+  reorder: protectedProcedure
     .input(
       z.array(
         z.object({
@@ -160,6 +161,7 @@ export const collectionRouter = createTRPCRouter({
           await tx.collection.update({
             where: {
               id: collection.id,
+              userId: ctx.session.user.id,
             },
             data: {
               position: collection.position,
@@ -168,15 +170,18 @@ export const collectionRouter = createTRPCRouter({
         }
       });
     }),
-  inboxId: publicProcedure.query(async ({ ctx }) => {
+  inboxId: protectedProcedure.query(async ({ ctx }) => {
     const inbox = await findOrCreateInbox(ctx);
     return inbox.id;
   }),
 });
 
 async function fetchCollection(id: string, ctx: trpcContextShape) {
+  if (!ctx.session?.user.id) {
+    throw new Error("No user ID found in session.");
+  }
   return await ctx.db.collection.findFirst({
-    where: { id: id },
+    where: { id: id, userId: ctx.session.user.id },
     select: {
       id: true,
       name: true,
@@ -218,7 +223,7 @@ async function fetchCollection(id: string, ctx: trpcContextShape) {
                 },
               },
             },
-            where: { complete: false },
+            where: { complete: false, userId: ctx.session.user.id },
           },
         },
       },
@@ -230,8 +235,11 @@ async function fetchCollection(id: string, ctx: trpcContextShape) {
 }
 
 async function findOrCreateInbox(ctx: trpcContextShape) {
+  if (!ctx.session?.user.id) {
+    throw new Error("No user ID found in session.");
+  }
   const existingInbox = await ctx.db.collection.findFirst({
-    where: { name: "Inbox" },
+    where: { name: "Inbox", userId: ctx.session.user.id },
     select: { id: true },
   });
   if (existingInbox) {
@@ -246,9 +254,11 @@ async function findOrCreateInbox(ctx: trpcContextShape) {
             {
               name: "Uncategorized",
               position: 0,
+              userId: ctx.session.user.id,
             },
           ],
         },
+        userId: ctx.session.user.id,
       },
       select: {
         id: true,

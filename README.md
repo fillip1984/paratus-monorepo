@@ -13,3 +13,7 @@ See [paratus-pnpm-mono](https://github.com/fillip1984/paratus-pnpm-mono/tree/mai
 - [ ] - use clerk to secure both frontend and mobile app
 - [ ] - take for a trial run using it to track goals and activities
 - [ ] - build out further functionality as deemed necessary from trial runs
+
+## Sources
+
+- [Simon Grimm Todoist clone video](https://github.com/Galaxies-dev/todoist-clone-react-native)

@@ -1,16 +1,9 @@
 import { z } from "zod/v4";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const commentRouter = createTRPCRouter({
-  // readAll: publicProcedure.query(async ({ ctx }) => {
-  //   return await ctx.db.comment.findMany({
-  //     orderBy: {
-  //       text: "asc",
-  //     },
-  //   });
-  // }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         text: z.string().min(1),
@@ -23,10 +16,11 @@ export const commentRouter = createTRPCRouter({
           text: input.text,
           posted: new Date(),
           taskId: input.taskId,
+          userId: ctx.session.user.id,
         },
       });
     }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.string().min(1),
@@ -37,13 +31,14 @@ export const commentRouter = createTRPCRouter({
       return await ctx.db.comment.update({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
         data: {
           text: input.text,
         },
       });
     }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -53,6 +48,7 @@ export const commentRouter = createTRPCRouter({
       return await ctx.db.comment.delete({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
       });
     }),

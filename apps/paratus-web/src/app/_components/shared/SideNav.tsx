@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { FaSignOutAlt } from "react-icons/fa";
 import {
   FaCalendarDay,
   FaCalendarWeek,
@@ -13,11 +15,20 @@ import {
 
 import type { CollectionSummaryType } from "@paratus/api";
 
+import { authClient } from "~/auth/client";
 import { api } from "~/trpc/react";
 import Modal from "../ui/modal";
 
 export default function SideNav() {
   const path = usePathname();
+  const router = useRouter();
+  const { data: session } = authClient.useSession();
+  // useEffect(() => {
+  //   console.log({ msg: "sidenav", session });
+  //   if (session === null) {
+  //     router.push("/");
+  //   }
+  // }, [session]);
 
   const { data: collections } = api.collection.readAll.useQuery();
   const { data: today } = api.task.today.useQuery();
@@ -91,7 +102,7 @@ export default function SideNav() {
             <FaPlus />
           </button>
         </div>
-        <div className="flex flex-col gap-1 px-3 text-sm">
+        <div className="flex flex-1 flex-col gap-1 px-3 text-sm">
           {collections
             ?.filter((collection) => collection.name !== "Inbox")
             .map((collection) => (
@@ -111,6 +122,33 @@ export default function SideNav() {
                 </span>
               </Link>
             ))}
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-2">
+          {session?.user.image && (
+            <Image
+              src={session.user.image}
+              alt="User Avatar"
+              width={32}
+              height={32}
+              className="rounded-full"
+            />
+          )}
+          <button
+            type="button"
+            onClick={async () =>
+              await authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => router.push("/"),
+                  onError: () => router.push("/"),
+                },
+              })
+            }
+            className="flex items-center gap-2 text-2xl"
+          >
+            <FaSignOutAlt />
+            Sign out
+          </button>
         </div>
       </nav>
 

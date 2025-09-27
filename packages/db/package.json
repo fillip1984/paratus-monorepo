@@ -22,6 +22,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc",
     "postinstall": "pnpm with-env prisma generate",
     "format": "prettier --write . --ignore-path ../../.gitignore",
     "lint": "eslint",

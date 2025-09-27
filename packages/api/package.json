@@ -19,6 +19,7 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
+    "@paratus/auth": "workspace:*",
     "@paratus/db": "workspace:*",
     "@trpc/server": "catalog:",
     "date-fns": "catalog:",
