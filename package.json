@@ -25,7 +25,7 @@
     "start:web": "pnpm --filter paratus-web run start"
   },
   "dependencies": {
-    "sst": "^3.17.12"
+    "sst": "^3.17.14"
   },
   "devDependencies": {
     "@paratus/prettier-config": "workspace:*",

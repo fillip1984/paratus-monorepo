@@ -8,7 +8,6 @@ import { db } from "@paratus/db";
 
 export function initAuth(options: {
   baseUrl: string;
-  productionUrl: string;
   secret: string | undefined;
 
   // githubClientId: string;
@@ -29,7 +28,7 @@ export function initAuth(options: {
          * Auto-inference blocked by https://github.com/better-auth/better-auth/pull/2891
          */
         currentURL: options.baseUrl,
-        productionURL: options.productionUrl,
+        productionURL: options.baseUrl,
       }),
       expo(),
     ],
@@ -42,7 +41,7 @@ export function initAuth(options: {
       google: {
         clientId: options.googleClientId,
         clientSecret: options.googleClientSecret,
-        redirectURI: `${options.productionUrl}/api/auth/callback/google`,
+        redirectURI: `${options.baseUrl}/api/auth/callback/google`,
       },
     },
     emailAndPassword: {

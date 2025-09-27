@@ -13,6 +13,10 @@ export function authEnv() {
           ? z.string().min(1)
           : z.string().min(1).optional(),
       NODE_ENV: z.enum(["development", "production"]).optional(),
+      PRODUCTION_URL:
+        process.env.NODE_ENV === "production"
+          ? z.string().url().min(1)
+          : z.string().url().min(1).optional(),
     },
     experimental__runtimeEnv: {},
     skipValidation:

@@ -10,6 +10,7 @@ import SuperJSON from "superjson";
 
 import type { AppRouter } from "@paratus/api";
 
+import { env } from "~/env";
 import { createQueryClient } from "./query-client";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
@@ -76,6 +77,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
+  if (env.NODE_ENV === "production") return env.PRODUCTION_URL;
   // eslint-disable-next-line no-restricted-properties
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
