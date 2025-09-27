@@ -11,9 +11,11 @@ import { Link } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 
 import LoadOrRetry from "~/components/shared/LoadOrRetry";
+import UserAvatar from "~/components/UserAvatar";
 import { useRefreshOnFocus } from "~/hooks/useRefreshOnFocus";
 import { Colors } from "~/styles/colors";
 import { trpc } from "~/utils/api";
+import { authClient } from "~/utils/auth";
 
 export default function CollectionsScreen() {
   const collections = useQuery(trpc.collection.readAll.queryOptions());
@@ -24,6 +26,8 @@ export default function CollectionsScreen() {
     collection.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const { data: session } = authClient.useSession();
+
   return (
     <SafeAreaView style={{ backgroundColor: Colors.background }}>
       <LoadOrRetry
@@ -31,6 +35,19 @@ export default function CollectionsScreen() {
         isError={collections.isError}
         retry={collections.refetch}
       />
+
+      {session?.user && (
+        <View className="px-4">
+          <Link
+            href={{
+              pathname: "/(profile)",
+            }}
+          >
+            <UserAvatar user={session.user} />
+          </Link>
+        </View>
+      )}
+
       <View className="h-screen bg-background p-4">
         <TextInput
           value={search}

@@ -49,7 +49,7 @@ export function initAuth(options: {
       enabled: true,
       disableSignUp: true,
     },
-    trustedOrigins: ["expo://"],
+    trustedOrigins: ["paratus://", "expo://"],
   } satisfies BetterAuthOptions;
 
   return betterAuth(config);

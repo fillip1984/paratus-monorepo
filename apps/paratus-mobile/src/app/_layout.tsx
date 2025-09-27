@@ -16,6 +16,7 @@ import {
 import "~/styles/global.css";
 
 import { queryClient } from "~/utils/api";
+import { authClient } from "~/utils/auth";
 
 export default function RootLayout() {
   // refetch when network connection is restored
@@ -37,21 +38,52 @@ export default function RootLayout() {
     return () => subscription.remove();
   }, []);
 
+  //auth
+  const { data: session } = authClient.useSession();
+
   return (
     <QueryClientProvider client={queryClient}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(collections)/[id]"
-          options={{
-            title: "",
-            headerShown: false,
-            // headerBackButtonDisplayMode: "minimal",
-            // presentation: "fullScreenModal",
-            // headerBackButtonMenuEnabled: true,
-          }}
-        />
-        <Stack.Screen name="+not-found" />
+        <Stack.Protected guard={!!session}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(collections)/[id]"
+            options={{
+              title: "",
+              headerShown: false,
+              // headerBackButtonDisplayMode: "minimal",
+              // presentation: "fullScreenModal",
+              // headerBackButtonMenuEnabled: true,
+            }}
+          />
+          <Stack.Screen
+            name="(profile)/index"
+            options={{
+              title: "Profile",
+              headerShown: false,
+              presentation: "formSheet",
+            }}
+          />
+          <Stack.Screen
+            name="(task)/[id]"
+            options={{
+              title: "Task Details",
+              headerShown: false,
+              presentation: "formSheet",
+            }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack.Protected>
+
+        <Stack.Protected guard={!session}>
+          <Stack.Screen
+            name="social-sign-in"
+            options={{
+              title: "Social Sign In",
+              headerShown: false,
+            }}
+          />
+        </Stack.Protected>
       </Stack>
       <StatusBar style="light" />
     </QueryClientProvider>

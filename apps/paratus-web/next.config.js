@@ -22,7 +22,7 @@ const config = {
   ],
 
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    remotePatterns: [{ protocol: "https", hostname: "lh3.googleusercontent.com" }],
   },
 
   /** We already do linting and typechecking as separate tasks in CI */
