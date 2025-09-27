@@ -2,10 +2,10 @@ import PriorityOption from "@prisma/client";
 import { endOfDay, startOfDay } from "date-fns";
 import { z } from "zod/v4";
 
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const taskRouter = createTRPCRouter({
-  today: publicProcedure.query(async ({ ctx }) => {
+  today: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.task.findMany({
       orderBy: {
         position: "asc",
@@ -29,6 +29,7 @@ export const taskRouter = createTRPCRouter({
         },
       },
       where: {
+        userId: ctx.session.user.id,
         complete: false,
         dueDate: {
           gte: startOfDay(new Date()),
@@ -37,7 +38,7 @@ export const taskRouter = createTRPCRouter({
       },
     });
   }),
-  upcoming: publicProcedure.query(async ({ ctx }) => {
+  upcoming: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.task.findMany({
       orderBy: {
         position: "asc",
@@ -61,6 +62,7 @@ export const taskRouter = createTRPCRouter({
         },
       },
       where: {
+        userId: ctx.session.user.id,
         complete: false,
         dueDate: {
           gte: startOfDay(new Date()),
@@ -68,12 +70,13 @@ export const taskRouter = createTRPCRouter({
       },
     });
   }),
-  // readOne: publicProcedure
+  // readOne: protectedProcedure
   //   .input(z.object({ id: z.string().min(1) }))
   //   .query(async ({ ctx, input }) => {
   //     return await ctx.db.task.findFirst({
   //       where: {
   //         id: input.id,
+  //         userId: ctx.session.user.id,
   //       },
   //       include: {
   //         checklistItems: {
@@ -89,7 +92,7 @@ export const taskRouter = createTRPCRouter({
   //       },
   //     });
   //   }),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         text: z.string().min(1),
@@ -114,23 +117,28 @@ export const taskRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const section = await ctx.db.section.findFirst({
-        where: { id: input.sectionId },
+        where: { id: input.sectionId, userId: ctx.session.user.id },
         include: {
           _count: {
             select: { tasks: true },
           },
         },
       });
-      let position = section?._count.tasks ?? 0;
+      if (!section) {
+        throw new Error(`Unable to find section by id: ${input.sectionId}`);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      let position = section._count.tasks ?? 0;
       if (input.parentTaskId) {
         const parentTask = await ctx.db.task.findUnique({
-          where: { id: input.parentTaskId },
+          where: { id: input.parentTaskId, userId: ctx.session.user.id },
           select: {
             text: true,
             children: true,
           },
         });
         if (parentTask) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           position = parentTask.children.length + 1;
         }
       }
@@ -141,12 +149,14 @@ export const taskRouter = createTRPCRouter({
           dueDate: input.dueDate,
           // priority: input.priority,
           sectionId: input.sectionId,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           position: position,
           parentId: input.parentTaskId,
+          userId: ctx.session.user.id,
         },
       });
     }),
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.string().min(1),
@@ -175,6 +185,7 @@ export const taskRouter = createTRPCRouter({
       return await ctx.db.task.update({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
         data: {
           text: input.text,
@@ -187,7 +198,7 @@ export const taskRouter = createTRPCRouter({
         },
       });
     }),
-  delete: publicProcedure
+  delete: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -197,10 +208,11 @@ export const taskRouter = createTRPCRouter({
       return await ctx.db.task.delete({
         where: {
           id: input.id,
+          userId: ctx.session.user.id,
         },
       });
     }),
-  reorder: publicProcedure
+  reorder: protectedProcedure
     .input(
       z.array(
         z.object({
@@ -216,6 +228,7 @@ export const taskRouter = createTRPCRouter({
           await tx.task.update({
             where: {
               id: task.id,
+              userId: ctx.session.user.id,
             },
             data: {
               position: task.position,

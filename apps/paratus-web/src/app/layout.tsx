@@ -56,6 +56,11 @@ const LoginLayout = () => {
   const [emailLoginLoading, setEmailLoginLoading] = useState(false);
   const handleEmailSignIn = async () => {
     setEmailLoginLoading(true);
+    // await authClient.signUp.email({
+    //   email,
+    //   password,
+    //   name: "your name",
+    // });
     await authClient.signIn.email({
       email,
       password,
