@@ -124,8 +124,7 @@ export default function SideNav() {
             ))}
         </div>
 
-        <div className="flex items-center justify-center">
-          {session?.user.name}
+        <div className="flex flex-col items-center justify-center gap-2">
           {session?.user.image && (
             <Image
               src={session.user.image}

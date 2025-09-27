@@ -45,6 +45,10 @@ export function initAuth(options: {
         redirectURI: `${options.productionUrl}/api/auth/callback/google`,
       },
     },
+    emailAndPassword: {
+      enabled: true,
+      disableSignUp: true,
+    },
     trustedOrigins: ["expo://"],
   } satisfies BetterAuthOptions;
 
