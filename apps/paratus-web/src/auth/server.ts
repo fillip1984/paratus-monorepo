@@ -8,7 +8,9 @@ import { initAuth } from "@paratus/auth";
 import { env } from "~/env";
 
 const baseUrl =
-  env.NODE_ENV === "production" ? env.PRODUCTION_URL : "http://localhost:3000";
+  env.NODE_ENV === "production" && env.PRODUCTION_URL
+    ? env.PRODUCTION_URL
+    : "http://localhost:3000";
 
 export const auth = initAuth({
   baseUrl,

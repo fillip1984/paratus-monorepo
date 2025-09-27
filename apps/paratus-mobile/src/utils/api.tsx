@@ -6,7 +6,7 @@ import superjson from "superjson";
 import type { AppRouter } from "@paratus/api";
 
 import { authClient } from "./auth";
-// import { authClient } from "./auth";
+
 import { getBaseUrl } from "./base-url";
 
 export const queryClient = new QueryClient({
