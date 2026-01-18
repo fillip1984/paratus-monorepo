@@ -10,9 +10,6 @@ export function initAuth(options: {
   baseUrl: string;
   secret: string | undefined;
 
-  // githubClientId: string;
-  // githubClientSecret: string;
-
   googleClientId: string;
   googleClientSecret: string;
 }) {
@@ -33,22 +30,18 @@ export function initAuth(options: {
       expo(),
     ],
     socialProviders: {
-      // github: {
-      // clientId: options.githubClientId,
-      // clientSecret: options.githubClientSecret,
-      // redirectURI: `${options.productionUrl}/api/auth/callback/github`,
-      // },
       google: {
         clientId: options.googleClientId,
         clientSecret: options.googleClientSecret,
         redirectURI: `${options.baseUrl}/api/auth/callback/google`,
       },
     },
-    emailAndPassword: {
-      enabled: true,
-      disableSignUp: true,
-    },
     trustedOrigins: ["paratus://", "expo://"],
+    onAPIError: {
+      onError(error, ctx) {
+        console.error("BETTER AUTH API ERROR", error, ctx);
+      },
+    },
   } satisfies BetterAuthOptions;
 
   return betterAuth(config);

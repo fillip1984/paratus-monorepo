@@ -27,14 +27,14 @@
     "start:web": "pnpm --filter paratus-web run start"
   },
   "dependencies": {
-    "sst": "^3.17.14"
+    "sst": "^3.17.25"
   },
   "devDependencies": {
     "@paratus/prettier-config": "workspace:*",
-    "@types/aws-lambda": "8.10.152",
-    "dotenv-cli": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
+    "@types/aws-lambda": "8.10.159",
+    "dotenv-cli": "^11.0.0",
+    "prettier": "^3.8.0",
+    "typescript": "^5.9.3"
   },
   "prettier": "@paratus/prettier-config"
 }

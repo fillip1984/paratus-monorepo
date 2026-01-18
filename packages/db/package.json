@@ -1,10 +1,8 @@
 {
   "name": "@paratus/db",
-  "version": "1.0.0",
   "private": true,
-  "description": "",
   "type": "module",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@10.11.1",
   "exports": {
     ".": {
@@ -21,29 +19,32 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm lint && tsc",
+    "clean": "git clean -xdf .cache  dist node_modules",
     "dev": "tsc",
-    "postinstall": "pnpm with-env prisma generate",
     "format": "prettier --write . --ignore-path ../../.gitignore",
     "lint": "eslint",
     "generate": "pnpm with-env prisma generate",
     "push": "pnpm with-env prisma db push",
     "studio": "pnpm with-env prisma studio",
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@prisma/client": "catalog:",
-    "zod": "catalog:"
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@paratus/eslint-config": "workspace:*",
     "@paratus/prettier-config": "workspace:*",
     "@paratus/tsconfig": "workspace:*",
-    "dotenv-cli": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "prisma": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "25.0.9",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.0",
+    "prisma": "^7.2.0",
+    "typescript": "^5.9.3"
   },
   "prettier": "@paratus/prettier-config"
 }

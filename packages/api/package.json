@@ -1,6 +1,5 @@
 {
   "name": "@paratus/api",
-  "version": "0.1.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -11,7 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "pnpm lint && tsc",
     "clean": "git clean -xdf dist node_modules",
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
@@ -21,19 +20,19 @@
   "dependencies": {
     "@paratus/auth": "workspace:*",
     "@paratus/db": "workspace:*",
-    "@trpc/server": "catalog:",
-    "date-fns": "catalog:",
-    "superjson": "catalog:",
-    "zod": "catalog:"
+    "@trpc/server": "^11.8.1",
+    "date-fns": "^4.1.0",
+    "superjson": "^2.2.6",
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@paratus/eslint-config": "workspace:*",
     "@paratus/prettier-config": "workspace:*",
     "@paratus/tsconfig": "workspace:*",
-    "@types/node": "catalog:",
-    "eslint": "catalog:",
-    "prettier": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.0",
+    "typescript": "^5.9.3"
   },
   "prettier": "@paratus/prettier-config"
 }

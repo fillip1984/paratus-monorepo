@@ -8,10 +8,10 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { ZodError } from "zod/v4";
+import { z, ZodError } from "zod/v4";
 
 import type { Auth } from "@paratus/auth";
-import { db } from "@paratus/db";
+import { db } from "@paratus/db/client";
 
 /**
  * 1. CONTEXT
@@ -25,6 +25,7 @@ import { db } from "@paratus/db";
  *
  * @see https://trpc.io/docs/server/context
  */
+
 export const createTRPCContext = async (opts: {
   headers: Headers;
   auth: Auth;
@@ -39,8 +40,6 @@ export const createTRPCContext = async (opts: {
     db,
   };
 };
-export type trpcContextShape = Awaited<ReturnType<typeof createTRPCContext>>;
-
 /**
  * 2. INITIALIZATION
  *
@@ -53,16 +52,13 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     ...shape,
     data: {
       ...shape.data,
-      zodError: error.cause instanceof ZodError ? error.cause.flatten() : null,
+      zodError:
+        error.cause instanceof ZodError
+          ? z.flattenError(error.cause as ZodError<Record<string, unknown>>)
+          : null,
     },
   }),
 });
-
-/**
- * Create a server-side caller
- * @see https://trpc.io/docs/server/server-side-calls
- */
-export const createCallerFactory = t.createCallerFactory;
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
